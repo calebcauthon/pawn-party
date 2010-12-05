@@ -14,4 +14,10 @@
         }
     };
 
+    jQuery.fn.loadBoard = function(pieces){
+
+        $(this).children().addClass(pieces[0].color);
+
+    }
+
 })(jQuery);
