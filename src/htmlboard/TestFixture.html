@@ -50,7 +50,7 @@
                 items.ChessBoard.loadBoard([{"location" : "A1", "color": "white"}]);
     
                 ok($(items.ChessBoard).find('.A.1').hasClass('white'), 'The white style was not applied.');
-
+		equals(items.ChessBoard.find('.white').length, 1, 'The white style was applied to the wrong squares.');
             });
 
 	    test('Loading a black piece to a1 sets the black style to a1', function(){
@@ -59,7 +59,35 @@
                 items.ChessBoard.loadBoard([{"location" : "A1", "color": "black"}]);
       
                 ok($(items.ChessBoard).find('.A.1').hasClass('black'), 'The black style was not applied.');
+
+		equals(items.ChessBoard.find('.black').length, 1, 'The black style was applied to the wrong squares.');
+
 	    });
+
+	    test('Loading a white piece to e4 sets the white style to e4', function(){
+		items.ChessBoard.setupBoard();
+		items.ChessBoard.loadBoard([{"location" : "E4", "color": "white"}]);
+
+                ok($(items.ChessBoard).find('.E.4').hasClass('white'), 'The white style was not applied.');
+
+		equals(items.ChessBoard.find('.white').length, 1, 'The white style was applied to the wrong squares.');
+
+	    }); 
+
+
+	    test('Loading a white piece to c8 and a black piece to f7 will work', function(){
+		items.ChessBoard.setupBoard();
+		items.ChessBoard.loadBoard([{"location" : "C8", "color": "white"},
+					    {"location" : "F7", "color": "black"}]);
+
+
+                ok($(items.ChessBoard).find('.C.8').hasClass('white'), 'The white style was not applied.');
+		equals(items.ChessBoard.find('.white').length, 1, 'The white style was applied to the wrong squares.');
+
+                ok($(items.ChessBoard).find('.F.7').hasClass('black'), 'The black style was not applied.');
+		equals(items.ChessBoard.find('.black').length, 1, 'The black style was applied to the wrong squares.');
+	    }); 
+
 
             function check_that_the_eight_rows_for_this_column_are_numbered_one_through_eight(column) {
                 test('Column ' + column + ' has rows 1 through 8', function () {

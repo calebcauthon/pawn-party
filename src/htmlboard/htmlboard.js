@@ -16,7 +16,9 @@
 
     jQuery.fn.loadBoard = function(pieces){
 
-        $(this).children().addClass(pieces[0].color);
+        for (var index in pieces){
+	    $(this).find('.' + pieces[index].location[0] + '.' + pieces[index].location[1]).addClass(pieces[index].color);
+	}
 
     }
 
