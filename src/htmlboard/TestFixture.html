@@ -14,14 +14,14 @@
             var items = { 'ChessBoard': $('#chessboard') };
 
             QUnit.testStart = function (name) {
-                items.ChessBoard.html('');
+                $('#chessboard').html('');
             };
 
             module('Setup');
 
             test('The chess board has 64 squares', function () {
-                items.ChessBoard.setupBoard();
-                equals(items.ChessBoard.find('div').length, 64, 'There are not 64 squares on the board.');
+                $('#chessboard').setupBoard();
+                equals($('#chessboard').find('div').length, 64, 'There are not 64 squares on the board.');
             });
 
             check_that_eight_squares_for_this_column_exist('A');
@@ -46,46 +46,46 @@
 
             test('Loading a white piece to a1 sets the white style to a1', function(){
 
-                items.ChessBoard.setupBoard();
-                items.ChessBoard.loadBoard([{"location" : "A1", "color": "white"}]);
+                $('#chessboard').setupBoard();
+                $('#chessboard').loadBoard([{"location" : "A1", "color": "white"}]);
     
-                ok($(items.ChessBoard).find('.A.1').hasClass('white'), 'The white style was not applied.');
-		equals(items.ChessBoard.find('.white').length, 1, 'The white style was applied to the wrong squares.');
+                ok($($('#chessboard')).find('.A.1').hasClass('white'), 'The white style was not applied.');
+		equals($('#chessboard').find('.white').length, 1, 'The white style was applied to the wrong squares.');
             });
 
 	    test('Loading a black piece to a1 sets the black style to a1', function(){
 
-                items.ChessBoard.setupBoard();
-                items.ChessBoard.loadBoard([{"location" : "A1", "color": "black"}]);
+                $('#chessboard').setupBoard();
+                $('#chessboard').loadBoard([{"location" : "A1", "color": "black"}]);
       
-                ok($(items.ChessBoard).find('.A.1').hasClass('black'), 'The black style was not applied.');
+                ok($($('#chessboard')).find('.A.1').hasClass('black'), 'The black style was not applied.');
 
-		equals(items.ChessBoard.find('.black').length, 1, 'The black style was applied to the wrong squares.');
+		equals($('#chessboard').find('.black').length, 1, 'The black style was applied to the wrong squares.');
 
 	    });
 
 	    test('Loading a white piece to e4 sets the white style to e4', function(){
-		items.ChessBoard.setupBoard();
-		items.ChessBoard.loadBoard([{"location" : "E4", "color": "white"}]);
+		$('#chessboard').setupBoard();
+		$('#chessboard').loadBoard([{"location" : "E4", "color": "white"}]);
 
-                ok($(items.ChessBoard).find('.E.4').hasClass('white'), 'The white style was not applied.');
+                ok($($('#chessboard')).find('.E.4').hasClass('white'), 'The white style was not applied.');
 
-		equals(items.ChessBoard.find('.white').length, 1, 'The white style was applied to the wrong squares.');
+		equals($('#chessboard').find('.white').length, 1, 'The white style was applied to the wrong squares.');
 
 	    }); 
 
 
 	    test('Loading a white piece to c8 and a black piece to f7 will work', function(){
-		items.ChessBoard.setupBoard();
-		items.ChessBoard.loadBoard([{"location" : "C8", "color": "white"},
+		$('#chessboard').setupBoard();
+		$('#chessboard').loadBoard([{"location" : "C8", "color": "white"},
 					    {"location" : "F7", "color": "black"}]);
 
 
-                ok($(items.ChessBoard).find('.C.8').hasClass('white'), 'The white style was not applied.');
-		equals(items.ChessBoard.find('.white').length, 1, 'The white style was applied to the wrong squares.');
+                ok($($('#chessboard')).find('.C.8').hasClass('white'), 'The white style was not applied.');
+		equals($('#chessboard').find('.white').length, 1, 'The white style was applied to the wrong squares.');
 
-                ok($(items.ChessBoard).find('.F.7').hasClass('black'), 'The black style was not applied.');
-		equals(items.ChessBoard.find('.black').length, 1, 'The black style was applied to the wrong squares.');
+                ok($($('#chessboard')).find('.F.7').hasClass('black'), 'The black style was not applied.');
+		equals($('#chessboard').find('.black').length, 1, 'The black style was applied to the wrong squares.');
 	    }); 
 
 	    check_that_this_piece_type_sets_the_style_to_a_square('pawn');
@@ -95,14 +95,38 @@
 	    check_that_this_piece_type_sets_the_style_to_a_square('queen');
 	    check_that_this_piece_type_sets_the_style_to_a_square('king');
 
+	    module('Piece movement');
+
+	    test('Clicking on a piece will set a highlighted style to all available move squares', function(){
+		$('#chessboard').setupBoard();
+		$('#chessboard').setAvailableMoves([{"location": "A1", "availableMoves": ["A2", "F3"]}]);
+		
+		$('#chessboard').find('.A.1').click();
+		
+		ok($('#chessboard').find('.F.3').hasClass('highlighted'), "F3 was not set to be highlighted.");
+		ok($('#chessboard').find('.A.2').hasClass('highlighted'), "A2 was not set to be highlighted.");
+		equals($('#chessboard').find('.highlighted').length, 2, "Only F3 and A2 should be set to highlighted.");
+	    });
+
+	    test('Can differentiate between the squares for one piece and those for another', function(){
+		$('#chessboard').setupBoard();
+		$('#chessboard').setAvailableMoves([{"location": "H7", "availableMoves": ["A5"]},
+						    {"location": "A1", "availableMoves": ["A2", "F3"]}]);
+		
+		$('#chessboard').find('.H.7').click();
+		
+		ok($('#chessboard').find('.A.5').hasClass('highlighted'), "A5 was not set to be highlighted.");
+		equals($('#chessboard').find('.highlighted').length, 1, "Only A5 should be set to highlighted.");
+	    });
+
 	    function check_that_this_piece_type_sets_the_style_to_a_square(type){
 		test('Loading a ' + type + ' to square a1 sets the ' + type + ' style to a1', function(){
-		    items.ChessBoard.setupBoard();
-		    items.ChessBoard.loadBoard([{"location" : "A1", "type": type}]);
+		    $('#chessboard').setupBoard();
+		    $('#chessboard').loadBoard([{"location" : "A1", "type": type}]);
 
-		    ok($(items.ChessBoard).find('.A.1').hasClass(type), 'The pawn style was not applied.');
+		    ok($($('#chessboard')).find('.A.1').hasClass(type), 'The pawn style was not applied.');
 
-		    equals(items.ChessBoard.find('.' + type).length, 1, 'The pawn style was applied to the wrong squares.');
+		    equals($('#chessboard').find('.' + type).length, 1, 'The pawn style was applied to the wrong squares.');
 
 		}); 
 	    }
@@ -110,17 +134,17 @@
 
             function check_that_the_eight_rows_for_this_column_are_numbered_one_through_eight(column) {
                 test('Column ' + column + ' has rows 1 through 8', function () {
-                    items.ChessBoard.setupBoard();
+                    $('#chessboard').setupBoard();
                     for(var index = 1; index < 8; index++)
-                        equals(items.ChessBoard.find('.' + column + '.' + index).length, 1, 'Missing row ' + index + ' in column ' + column + '.');
+                        equals($('#chessboard').find('.' + column + '.' + index).length, 1, 'Missing row ' + index + ' in column ' + column + '.');
                 });
 
             }
 
             function check_that_eight_squares_for_this_column_exist(column) {
                 test('The chess board contains 8 squares in column ' + column, function () {
-                    items.ChessBoard.setupBoard();
-                    equals(items.ChessBoard.find('div.' + column).length, 8, 'There are not 8 ' + column + ' squares on the board.');
+                    $('#chessboard').setupBoard();
+                    equals($('#chessboard').find('div.' + column).length, 8, 'There are not 8 ' + column + ' squares on the board.');
                 });
             }
         });
