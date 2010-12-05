@@ -14,7 +14,7 @@
 		square.bind('click', function(){
 		    
 		    var location = getCurrentLocation($(this));
-		    var available_moves = $(location).get(0).availableMoves;
+		    var available_moves = $(location).data('availableMoves');
 
 		    $(this).parent().children().removeClass('highlighted');
 
@@ -47,10 +47,9 @@
     };
 
     jQuery.fn.setAvailableMoves = function(moves){
-	//$(this).data('availableMoves', moves);
 	for(var index in moves){
 	    var location = '.' + moves[index].location[0] + '.' + moves[index].location[1];
-	    $('' + location).get(0).availableMoves = moves[index].availableMoves;
+	    $('' + location).data('availableMoves', moves[index].availableMoves);
 	}
     };
 
