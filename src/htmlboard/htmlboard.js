@@ -17,7 +17,9 @@
     jQuery.fn.loadBoard = function(pieces){
 
         for (var index in pieces){
-	    $(this).find('.' + pieces[index].location[0] + '.' + pieces[index].location[1]).addClass(pieces[index].color);
+	    var square = $(this).find('.' + pieces[index].location[0] + '.' + pieces[index].location[1]);
+	    square.addClass(pieces[index].color);
+	    square.addClass(pieces[index].type);
 	}
 
     }
