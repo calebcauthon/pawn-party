@@ -119,6 +119,15 @@
 		equals($('#chessboard').find('.highlighted').length, 1, "Only A5 should be set to highlighted.");
 	    });
 
+	    test('Clicking on a square that has no available moves will not highlight any squares', function(){
+		$('#chessboard').setupBoard();
+		$('#chessboard').setAvailableMoves([{"location": "H7", "availableMoves": ["A5"]}]);
+
+		$('#chessboard').find('.H.6').click();
+
+		equals($('#chessboard').find('.highlighted').length, 0, "Other squares are highlighted.");
+	    });
+
 	    function check_that_this_piece_type_sets_the_style_to_a_square(type){
 		test('Loading a ' + type + ' to square a1 sets the ' + type + ' style to a1', function(){
 		    $('#chessboard').setupBoard();
