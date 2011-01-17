@@ -29,11 +29,9 @@ $(document).ready(function() {
 		var y = 34;
 		var width = 5;
 		var height = 5;
-		a_square.draw(x, y, width, height);
-		
-		var canvas = document.getElementById('canvas_element');
-		var context = canvas.getContext('2d');
-		
+		var bottom_right_x = parseInt(x, 10) + parseInt(width, 10) - 1;
+		var bottom_right_y = parseInt(y, 10) + parseInt(height, 10) - 1;
+
 		var is_white = function(image_data) {
 			if(image_data.data[0] == 0 &&
 			image_data.data[1] == 0 &&
@@ -42,13 +40,20 @@ $(document).ready(function() {
 			else
 				return false;
 		}
-		
 		var is_not_white = function(image_data) {
 			return is_white(image_data) ? false : true;
 		}
 		
-		var image_data = context.getImageData(x, y, 1, 1);
-		equals(is_not_white(image_data), true);
+		a_square.draw(x, y, width, height);
+		
+		var canvas = document.getElementById('canvas_element');
+		var context = canvas.getContext('2d');
+		
+		var upper_left_corner_ = context.getImageData(x, y, 1, 1);
+		var bottom_right_corner = context.getImageData(bottom_right_x, bottom_right_y, 1, 1);
+
+		equals(is_not_white(upper_left_corner_), true);
+		equals(is_not_white(bottom_right_corner), true);
 	});
 	test("square.set_piece() sets a chess piece", function() {
 		var a_square = new square();
