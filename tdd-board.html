@@ -1,0 +1,73 @@
+<script src="lib/jquery.144.js"></script>
+<script src="lib/qunit.js"></script>
+<link href="css/qunit.css"></script>
+
+<body>
+  <h1 id="qunit-header">QUnit example</h1>
+ <h2 id="qunit-banner"></h2>
+ <div id="qunit-testrunner-toolbar"></div>
+ <h2 id="qunit-userAgent"></h2>
+ <ol id="qunit-tests"></ol>
+ <div id="qunit-fixture">test markup, will be hidden</div>
+</body>
+
+<script type="text/javascript" src="lib/square.js"></script>
+<script type="text/javascript" src="lib/piece.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	
+	test("square.draw() draws a square with a chess piece image", function() {
+	});
+	test("square.draw() draws blank square if theres no piece", function() {
+		// the square should start at the upper left corner, and be the width 
+		// and height set in the square's properties
+		
+		var a_square = new square();		
+		equals(a_square.has_piece(), false);
+		
+		var x = 4;
+		var y = 34;
+		var width = 5;
+		var height = 5;
+		a_square.draw(x, y, width, height);
+		
+		var canvas = document.getElementById('canvas_element');
+		var context = canvas.getContext('2d');
+		
+		var is_white = function(image_data) {
+			if(image_data.data[0] == 0 &&
+			image_data.data[1] == 0 &&
+			image_data.data[2] == 0)
+				return true;
+			else
+				return false;
+		}
+		
+		var is_not_white = function(image_data) {
+			return is_white(image_data) ? false : true;
+		}
+		
+		var image_data = context.getImageData(x, y, 1, 1);
+		equals(is_not_white(image_data), true);
+	});
+	test("square.set_piece() sets a chess piece", function() {
+		var a_square = new square();
+		var rook = new generic_chess_piece();
+		
+		equals(a_square.has_piece(), false);
+		a_square.set_piece(rook);
+		equals(a_square.has_piece(), true);
+	});
+	test("a square class exists", function() {
+		var a_square = new square();
+	});
+	test("a basic test example", function() {
+		ok( true, "this test is fine" );
+		var value = "hello";
+		equals( "hello", value, "We expect value to be hello" );
+	});
+
+});
+</script>
+
+<canvas id="canvas_element" height="1000" width="1000"></canvas>
