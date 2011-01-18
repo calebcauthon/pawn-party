@@ -1,6 +1,6 @@
 <script src="lib/jquery.144.js"></script>
 <script src="lib/qunit.js"></script>
-<link href="css/qunit.css"></script>
+<link rel="stylesheet" href="css/qunit.css" />
 
 <body>
   <h1 id="qunit-header">QUnit example</h1>
@@ -26,6 +26,26 @@ $(document).ready(function() {
 	var is_not_white = function(image_data) {
 		return is_white(image_data) ? false : true;
 	}
+	test('square.draw() fills the square with its color', function() {
+		var canvas = document.getElementById('canvas_element');
+		var context = canvas.getContext('2d');
+		
+		var a_square = new square();
+		var color = 'rgb(33,25,199)';
+		
+		a_square.color = color;
+		a_square.set_context(context);
+		a_square.width = 10;
+		a_square.height = 10;
+		a_square.draw(10,10);
+		
+		var pixel = context.getImageData(13,13,1,1);
+		console.log(pixel);
+		equals(pixel.data[0], 33);
+		equals(pixel.data[1], 25);
+		equals(pixel.data[2], 199);
+		equals(is_not_white(pixel), true, "pixel should not be white");
+	});
 	test('square.draw() uses the width and height properties of itself', function() {
 		var canvas = document.getElementById('canvas_element');
 		var context = canvas.getContext('2d');
@@ -45,7 +65,6 @@ $(document).ready(function() {
 		
 		equals(is_not_white(pixel), true, 'pixel should not be white');		
 	});
-	
 	test('square.draw() uses an ioc canvas context', function() {
 		var this_canvas = document.getElementById('canvas_element');
 		var this_context = this_canvas.getContext('2d');
@@ -86,12 +105,10 @@ $(document).ready(function() {
 		equals(is_not_white(this_pixel_after_that_draw), true, "this pixel is not white after that draw");
 		equals(is_not_white(that_pixel_after_that_draw), true, "that pixel is not white after that draw");
 	});
-	
 	test('square.draw() throws an error if it doesnt have a context', function() {
 		var a_square = new square();
 		raises(a_square.draw, "expected an error, didnt get one");
 	});
-	
 	test("square.draw() draws blank square if theres no piece", function() {
 		// the square should start at the upper left corner, and be the width 
 		// and height set in the square's properties
@@ -120,7 +137,7 @@ $(document).ready(function() {
 		var bottom_right_corner_before_drawing = context.getImageData(bottom_right_x, bottom_right_y, 1, 1);
 
 		a_square.draw(x, y, width, height);
-		
+	
 		var upper_left_corner_after_drawing = context.getImageData(x, y, 1, 1);
 		var bottom_right_corner_after_drawing = context.getImageData(bottom_right_x, bottom_right_y, 1, 1);
 
