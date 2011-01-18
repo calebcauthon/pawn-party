@@ -11,15 +11,29 @@
 
         $(document).ready(function () {
 
-            var items = {'ChessBoard' : $('#chessboard') };
+            var items = { 'ChessBoard': $('#chessboard') };
+
+            QUnit.testStart = function (name) {
+                items.ChessBoard.html('');
+            };
 
             module('Setup');
 
             test('The chess board has 64 squares', function () {
                 items.ChessBoard.setupBoard();
-                equals(items.ChessBoard.find('div').length, 64, 'There were not 64 squares on the board.');
+                equals(items.ChessBoard.find('div').length, 64, 'There are not 64 squares on the board.');
             });
 
+            check_that_eight_squares_for_this_column_exist('A');
+            check_that_eight_squares_for_this_column_exist('B');
+            check_that_eight_squares_for_this_column_exist('C');
+
+            function check_that_eight_squares_for_this_column_exist(column) {
+                test('The chess board contains 8 squares in column ' + column, function () {
+                    items.ChessBoard.setupBoard();
+                    equals(items.ChessBoard.find('div.' + column).length, 8, 'There are not 8 ' + column + ' squares on the board.');
+                });
+            }
         });
     </script>
 </head>
