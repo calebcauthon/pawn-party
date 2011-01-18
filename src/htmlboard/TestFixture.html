@@ -33,6 +33,24 @@
             check_that_eight_squares_for_this_column_exist('G');
             check_that_eight_squares_for_this_column_exist('H');
 
+            check_that_the_eight_rows_for_this_column_are_numbered_one_through_eight('A');
+            check_that_the_eight_rows_for_this_column_are_numbered_one_through_eight('B');
+            check_that_the_eight_rows_for_this_column_are_numbered_one_through_eight('C');
+            check_that_the_eight_rows_for_this_column_are_numbered_one_through_eight('D');
+            check_that_the_eight_rows_for_this_column_are_numbered_one_through_eight('E');
+            check_that_the_eight_rows_for_this_column_are_numbered_one_through_eight('F');
+            check_that_the_eight_rows_for_this_column_are_numbered_one_through_eight('G');
+            check_that_the_eight_rows_for_this_column_are_numbered_one_through_eight('H');
+
+            function check_that_the_eight_rows_for_this_column_are_numbered_one_through_eight(column) {
+                test('Column ' + column + ' has rows 1 through 8', function () {
+                    items.ChessBoard.setupBoard();
+                    for(var index = 1; index < 8; index++)
+                        equals(items.ChessBoard.find('.' + column + '.' + index).length, 1, 'Missing row ' + index + ' in column ' + column + '.');
+                });
+
+            }
+
             function check_that_eight_squares_for_this_column_exist(column) {
                 test('The chess board contains 8 squares in column ' + column, function () {
                     items.ChessBoard.setupBoard();
