@@ -27,7 +27,7 @@ $(document).ready(function() {
 		return is_white(image_data) ? false : true;
 	}
 	test('square.draw() uses the width and height properties of itself', function() {
-		var canvas = document.getElementById('canvas_element');
+		var canvas = $('#canvas_element').get(0);
 		var context = canvas.getContext('2d');
 		var a_square = new square();
 		a_square.set_context(context);
@@ -47,10 +47,10 @@ $(document).ready(function() {
 	});
 	
 	test('square.draw() uses an ioc canvas context', function() {
-		var this_canvas = document.getElementById('canvas_element');
+		var this_canvas = $('#canvas_element').get(0);
 		var this_context = this_canvas.getContext('2d');
 		
-		var that_canvas = document.getElementById('canvas_element_2');
+		var that_canvas = $('#canvas_element_2').get(0);
 		var that_context = that_canvas.getContext('2d');
 		
 		var this_square = new square();
@@ -95,7 +95,7 @@ $(document).ready(function() {
 	test("square.draw() draws blank square if theres no piece", function() {
 		// the square should start at the upper left corner, and be the width 
 		// and height set in the square's properties
-		var canvas = document.getElementById('canvas_element');
+		var canvas = $('#canvas_element').get(0);
 		var context = canvas.getContext('2d');
 		
 		var a_square = new square();		
@@ -113,7 +113,7 @@ $(document).ready(function() {
 		
 		
 
-		var canvas = document.getElementById('canvas_element');
+		var canvas = $('#canvas_element').get(0);
 		var context = canvas.getContext('2d');
 		
 		var upper_left_corner_before_drawing = context.getImageData(x, y, 1, 1);
