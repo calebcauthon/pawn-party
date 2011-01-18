@@ -11,14 +11,13 @@
 
         $(document).ready(function () {
 
+            var items = {'ChessBoard' : $('#chessboard') };
+
             module('Setup');
 
             test('The chess board has 64 squares', function () {
-
-                $('#chessboard').setupBoard();
-
-                equals($('#chessboard').find('div').length, 64, 'There were not 64 squares on the board.');
-
+                items.ChessBoard.setupBoard();
+                equals(items.ChessBoard.find('div').length, 64, 'There were not 64 squares on the board.');
             });
 
         });
