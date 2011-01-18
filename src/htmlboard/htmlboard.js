@@ -6,7 +6,9 @@
 
         for (column in columns) {
             for (var index = 0; index < 8; index++) {
-                $(this).append('<div class="' + columns[column] + '" />');
+                var square = $('<div />');
+                square.addClass(columns[column]);
+                $(this).append(square);
             }
         }
 

@@ -22,7 +22,6 @@
             test('The chess board has 64 squares', function () {
                 items.ChessBoard.setupBoard();
                 equals(items.ChessBoard.find('div').length, 64, 'There are not 64 squares on the board.');
-                alert(items.ChessBoard.html());
             });
 
             check_that_eight_squares_for_this_column_exist('A');
