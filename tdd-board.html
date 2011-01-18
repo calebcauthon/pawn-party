@@ -28,7 +28,24 @@ $(document).ready(function() {
 	var is_not_white = function(image_data) {
 		return is_white(image_data) ? false : true;
 	}
-
+	test('square.draw() uses its .left and .top attributes', function() {
+		var canvas = $('#canvas_element').get(0);
+		var context = canvas.getContext('2d');
+		
+		var a_square = new square();
+		a_square.set_context(context);
+		a_square.left = 133;
+		a_square.top = 727;
+		a_square.width = 5;
+		a_square.height = 5;
+		
+		var pixel_before_drawing = context.getImageData(133, 727, 1, 1);
+		a_square.draw();
+		var pixel_after_drawing = context.getImageData(133, 727, 1, 1);
+		
+		equals(is_white(pixel_before_drawing), true, 'pixel should be white');
+		equals(is_not_white(pixel_after_drawing), true, 'pixel should not be white');
+	}); 
 	test('square.draw() fills the square with its color', function() {
 		var canvas = document.getElementById('canvas_element');
 		var context = canvas.getContext('2d');
@@ -40,7 +57,9 @@ $(document).ready(function() {
 		a_square.set_context(context);
 		a_square.width = 10;
 		a_square.height = 10;
-		a_square.draw(10,10);
+		a_square.left = 10;
+		a_square.top = 10;
+		a_square.draw();
 		
 		var pixel = context.getImageData(13,13,1,1);
 		console.log(pixel);
@@ -61,8 +80,9 @@ $(document).ready(function() {
 		var y = 22;
 		a_square.width = width;
 		a_square.height = height;
-		
-		a_square.draw(x, y);
+		a_square.left = x;
+		a_square.top = y;
+		a_square.draw();
 		
 		var pixel = context.getImageData(x, y, width-1, height-1);
 		
@@ -96,12 +116,16 @@ $(document).ready(function() {
 		equals(is_white(this_pixel_before_draw), true, "this pixel is white before draw");
 		equals(is_white(that_pixel_before_draw), true, "that pixel is white before draw");
 		
-		this_square.draw(x, y);		
+		this_square.left = x;
+		this_square.top = y;
+		this_square.draw();		
 		var this_pixel_after_this_draw = this_context.getImageData(x, y, width-1, height-1);
 		var that_pixel_after_this_draw = that_context.getImageData(x, y, width-1, height-1);
 		equals(is_not_white(this_pixel_after_this_draw), true, "this pixel is not white after this draw");
 		equals(is_white(that_pixel_after_this_draw), true,  "that pixel is white after this draw");
 		
+		that_square.left = x;
+		that_square.top = y;
 		that_square.draw(x, y);
 		var this_pixel_after_that_draw = this_context.getImageData(x, y, width-1, height-1);
 		var that_pixel_after_that_draw = that_context.getImageData(x, y, width-1, height-1);
@@ -137,6 +161,8 @@ $(document).ready(function() {
 		var upper_left_corner_before_drawing = context.getImageData(x, y, 1, 1);
 		var bottom_right_corner_before_drawing = context.getImageData(bottom_right_x, bottom_right_y, 1, 1);
 
+		a_square.left = x;
+		a_square.top = y;
 		a_square.draw(x, y);
 	
 		var upper_left_corner_after_drawing = context.getImageData(x, y, 1, 1);
