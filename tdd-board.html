@@ -28,6 +28,60 @@ $(document).ready(function() {
 		return is_white(image_data) ? false : true;
 	}
 	
+	
+	test('board.create_empty_chess_board() each row uses altenating colors down the row', function() {
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+
+		for(var m = 0; m < squares.length; m++)
+		{
+			var a_square = squares[m];
+			
+			if(a_square.left == 0);
+			{
+				var color_one = a_square.color;
+				var color_two = squares[m+1].color;
+				
+				equals(color_one, squares[m+2].color);
+				equals(color_one, squares[m+4].color);
+				equals(color_one, squares[m+6].color);
+				
+				equals(color_two, squares[m+3].color);
+				equals(color_two, squares[m+5].color);
+				equals(color_two, squares[m+7].color);
+				m += 8;
+				m -= 1;
+			}
+		}	
+	});
+	test('board.create_empty_chess_board() the first and second row have different colors', function() {
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+
+		var color_one = squares[0].color;
+		var color_two = squares[8].color;
+		notEqual(color_one, color_two, 'the chess board is all one color');
+		
+	});
+	test('board.create_empty_chess_board() each row starts with an alternating color', function() {
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+
+		var color_one = squares[0].color;
+		var color_two = squares[8].color;
+		
+		if(!color_one)
+			equals(true, false, 'no color specified');
+		if(!color_two)
+			equals(true, false, 'no color specified');			
+		
+		equals(squares[16].color, color_one );
+		equals(squares[24].color, color_two);
+		equals(squares[32].color, color_one );
+		equals(squares[40].color, color_two);
+		equals(squares[48].color, color_one );
+		equals(squares[56].color, color_two);
+	});
 	test('board.create_empty_chess_board() that each square in a row doesnt overlap horizontally', function() {
 		var a_board = new board();
 		var squares = a_board.create_empty_chess_board();
