@@ -15,8 +15,6 @@
 <script type="text/javascript" src="lib/piece.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
-
-	
 	var is_white = function(image_data) {
 			if(image_data.data[0] == 0 &&
 			image_data.data[1] == 0 &&
@@ -28,7 +26,40 @@ $(document).ready(function() {
 	var is_not_white = function(image_data) {
 		return is_white(image_data) ? false : true;
 	}
-	
+	test('square.draw_image(path) draws an image anchored at .left and .top', function() {
+		var canvas = $('#canvas_element_5').get(0);
+		var context = canvas.getContext('2d');
+		
+		var a_square = new square();
+		a_square.set_context(context);
+		a_square.width = 10;
+		a_square.height = 10;
+		a_square.left = 60;
+		a_square.top = 90;
+		
+		a_square.color = 'rgb(0,0,0)';
+		a_square.draw_image('images/chesspieces/black-pawn.png');
+		
+		var raw_canvas = $('#canvas_element_6').get(0);
+		var raw_context = raw_canvas.getContext('2d');
+		
+		var img = new Image();
+		img.src = 'images/chesspieces/black-pawn.png';
+		img.onload = function() {
+			raw_context.drawImage(img,0,0);
+			var pixels = raw_context.getImageData(5,5,25,25);			
+			var other_pixels = context.getImageData(65,95,25,25);
+			
+			for(var i=0;i<100;i++)
+			{
+				if(pixels.data[i] != other_pixels.data[i])
+				{
+					alert('test failed, check console');
+					throw "pixels arent equal on "+i;
+				}
+			}
+		}
+	});
 	test('square.draw_image(path) draws an image', function() {
 		var canvas = $('#canvas_element_3').get(0);
 		var context = canvas.getContext('2d');
@@ -54,7 +85,13 @@ $(document).ready(function() {
 			var other_pixels = context.getImageData(5,5,25,25);
 			
 			for(var i=0;i<2500;i++)
-				equals(pixels.data[i], other_pixels.data[i], 'these pixels should be the same');
+			{
+				if(pixels.data[i] != other_pixels.data[i])
+				{
+					alert('test failed, check console');
+					throw "pixels arent equal on "+i;
+				}
+			}
 		}
 	});
 	test('square.draw() uses its .left and .top attributes', function() {
@@ -225,3 +262,5 @@ $(document).ready(function() {
 <canvas id="canvas_element_2" height="1000" width="1000"></canvas>
 <canvas id="canvas_element_3" height="1000" width="1000"></canvas>
 <canvas id="canvas_element_4" height="1000" width="1000"></canvas>
+<canvas id="canvas_element_5" height="1000" width="1000"></canvas>
+<canvas id="canvas_element_6" height="1000" width="1000"></canvas>
