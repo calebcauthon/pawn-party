@@ -12,6 +12,7 @@
 </body>
 
 <script type="text/javascript" src="lib/square.js"></script>
+<script type="text/javascript" src="lib/board.js"></script>
 <script type="text/javascript" src="lib/piece.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
@@ -26,6 +27,49 @@ $(document).ready(function() {
 	var is_not_white = function(image_data) {
 		return is_white(image_data) ? false : true;
 	}
+	
+	test('board.draw() draws all the squares it has in .squares', function() {
+		
+		var canvas = $('#board_test_1').get(0);
+		var context = canvas.getContext('2d');
+		
+		var black = 'rgb(0,0,0)';
+		var white = 'rgb(255,255,255)';
+		
+		var squares = [];
+		
+		for(var i=1;i <= 8; i++)
+		{	
+			var left = i * 32 - 32;
+			var color = (i % 2) == 0 ? black : white;
+			var this_square = new square();
+			this_square.set_context(context);
+			this_square.left = left;
+			this_square.top = 0;
+			this_square.color = color;
+			this_square.width = 32;
+			this_square.height = 32;
+			this.was_drawn = false;
+			this_square.draw = function() {
+				this.was_drawn = true;
+			}
+			squares.push(this_square);
+		}
+		
+		var a_board = new board();
+		a_board.squares = squares;
+		
+		a_board.draw();
+		
+		for(var i=0;i < squares.length; i++)
+		{
+			equals(squares[i].was_drawn, true);
+		}
+	});
+	test('board class exists', function() {
+		var a_board = new board();
+	});
+	
 	test('square.draw_image(path) draws an image anchored at .left and .top', function() {
 		var canvas = $('#canvas_element_5').get(0);
 		var context = canvas.getContext('2d');
@@ -257,6 +301,8 @@ $(document).ready(function() {
 
 });
 </script>
+
+<canvas id="board_test_1" height="300" width="300"></canvas>
 
 <canvas id="canvas_element" height="1000" width="1000"></canvas>
 <canvas id="canvas_element_2" height="1000" width="1000"></canvas>
