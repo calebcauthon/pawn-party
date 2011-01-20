@@ -28,6 +28,109 @@ $(document).ready(function() {
 		return is_white(image_data) ? false : true;
 	}
 	
+	var canvas = $('#click_board_2').get(0);
+	var context = canvas.getContext('2d');
+	var this_board = new board();
+	this_board.context = context;
+	
+	var squares = this_board.create_empty_chess_board();
+	this_board.squares = squares;
+	this_board.draw();
+	$(canvas).click({board: this_board}, this_board.click);
+	
+	test('first column is "a" file, and so on, to "h"', function() {
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+		
+		var files = ['a','b','c','d','e','f','g','h'];
+		
+		var number_of_columns = 0;
+		for(var i = 0; i < 64; i++)
+		{
+			if(squares[i].left == 0)
+			{
+				for(var m = 0; m <= 7; m++)
+				{
+					var square_in_row = squares[i+m];
+					var expected_file = files[(i+m) % 8];
+					equals(square_in_row.file, expected_file);
+				}
+			}
+		}
+		
+	});
+	test('first row is 8th rank, and so on, to first rank', function() {
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+		
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+
+		var ranks = [8,7,6,5,4,3,2,1];
+		
+		for(var m = 0; m < squares.length; m++)
+		{
+			var a_square = squares[m];
+			
+			if(a_square.left == 0);
+			{
+				for(var n = 0; n <= 7; n++)
+				{
+					var square_in_row = squares[m+n];
+					var expected_rank = ranks[Math.floor(m / 8)];
+					equals(square_in_row.rank, expected_rank);
+				}
+				m += 8;
+				m -= 1;
+			}
+		}		
+	});
+	test('board.get_square("a1") returns 1 square, for a-h, 1-8', function() {
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+		
+		a_board.squares = squares;
+		
+		var ranks = [1,2,3,4,5,6,7,8];
+		var files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+		
+		for(var i=0;i<8;i++)
+		{
+			for(var j=0;j<8;j++)
+			{
+				var algebraic_notation = "" + files[j] + ranks[i];
+				var this_square = a_board.get_square(algebraic_notation);
+				equals(this_square.algebraic_notation, algebraic_notation);
+			}
+		}
+		
+		var a1 = a_board.get_square('a1');
+		equals(a1.algebraic_notation, 'a1');
+	});
+	test('when you click a square for the first time, square.select() is called', function() {
+		var canvas = $('#click_board_1').get(0);
+		var context = canvas.getContext('2d');
+		
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+		a_board.squares = squares;
+		
+		var a1 = a_board.get_square('a1');		
+		a1.has_been_clicked = false;
+		a1.select = function() {
+			this.has_been_clicked = true;
+		}
+		
+		$(canvas).click({board: a_board}, a_board.click);
+		
+		$(canvas).trigger({
+			type: "click",
+			offsetX: a1.left + 5,
+			offsetY: a1.top + 5
+		});
+		
+		equals(a1.has_been_clicked, true);
+	});
 	
 	test('board.create_empty_chess_board() each row uses altenating colors down the row', function() {
 		var a_board = new board();
@@ -464,7 +567,8 @@ $(document).ready(function() {
 
 });
 </script>
-
+<canvas id="click_board_2" height="300" width="300" style="border: 1px solid red;"></canvas>
+<canvas id="click_board_1" height="300" width="300" style="border: 1px solid red;"></canvas>
 <canvas id="board_test_1" height="300" width="300"></canvas>
 
 <canvas id="canvas_element" height="1000" width="1000"></canvas>
