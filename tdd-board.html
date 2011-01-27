@@ -28,11 +28,21 @@ $(document).ready(function() {
 		return is_white(image_data) ? false : true;
 	}
 
-
-	test('board.set_piece({piece:"white pawn", location: "a1"}) draws a pawn on a1', function() {
-		var canvas = $('#placement_1').get(0);
-		var context = canvas.getContext('2d');
+	test('board.set_pieces([]) sets a bunch of pieces', function() {
+		var a_board = new board();
+		a_board.squares = a_board.create_empty_chess_board();
 		
+		var white_pawn = { piece: 'white pawn', location: 'a3' }
+		var white_rook = { piece: 'white rook', location: 'b7' }
+		var pieces = [white_pawn, white_rook];
+		
+		a_board.set_pieces(pieces);
+		
+		
+		equals(a_board.get_square(white_pawn.location).algebraic_notation, white_pawn.location);
+		equals(a_board.get_square(white_rook.location).algebraic_notation, white_rook.location);
+	});
+	test('board.set_piece({piece:"white pawn", location: "a1"}) draws a pawn on a1', function() {
 		var a_board = new board();
 		a_board.squares = a_board.create_empty_chess_board();
 		a_board.set_piece({piece: 'white pawn', location: 'a1'});
