@@ -27,17 +27,31 @@ $(document).ready(function() {
 	var is_not_white = function(image_data) {
 		return is_white(image_data) ? false : true;
 	}
+
+
+	test('board.draw([{piece: "pawn.jpg", location: "a1"}, {}, {}, {}]) draws a pawn on a1', function() {
+		var canvas = $('#placement_1').get(0);
+		var context = canvas.getContext('2d');
+		
+		var a_board = new board();
+		//a_board.context
+	});
 	
-	var canvas = $('#click_board_2').get(0);
-	var context = canvas.getContext('2d');
-	var this_board = new board();
-	this_board.context = context;
+	test('board.context is used as context for all squares in create_empty_chess_board()', function() {
+		var canvas = $('#placement_1').get(0);
+		var context = canvas.getContext('2d');
+		
+		var a_board = new board();
+		a_board.context = 'something';
+		
+		var squares = a_board.create_empty_chess_board();
+		
+		for(var i = 0; i < 64; i++)
+		{
+			equals(squares[i].context, a_board.context);
+		}
 	
-	var squares = this_board.create_empty_chess_board();
-	this_board.squares = squares;
-	this_board.draw();
-	$(canvas).click({board: this_board}, this_board.click);
-	
+	});
 	test('first column is "a" file, and so on, to "h"', function() {
 		var a_board = new board();
 		var squares = a_board.create_empty_chess_board();
@@ -567,6 +581,8 @@ $(document).ready(function() {
 
 });
 </script>
+<canvas id="placement_1" height="100" width="100" style="border: 1px solid red;"></canvas>
+
 <canvas id="click_board_2" height="300" width="300" style="border: 1px solid red;"></canvas>
 <canvas id="click_board_1" height="300" width="300" style="border: 1px solid red;"></canvas>
 <canvas id="board_test_1" height="300" width="300"></canvas>
