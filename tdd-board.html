@@ -29,12 +29,16 @@ $(document).ready(function() {
 	}
 
 
-	test('board.draw([{piece: "pawn.jpg", location: "a1"}, {}, {}, {}]) draws a pawn on a1', function() {
+	test('board.set_piece({piece:"white pawn", location: "a1"}) draws a pawn on a1', function() {
 		var canvas = $('#placement_1').get(0);
 		var context = canvas.getContext('2d');
 		
 		var a_board = new board();
-		//a_board.context
+		a_board.squares = a_board.create_empty_chess_board();
+		a_board.set_piece({piece: 'white pawn', location: 'a1'});
+		
+		var pawn_square = a_board.get_square('a1');
+		equals(pawn_square.piece, 'white pawn');
 	});
 	
 	test('board.context is used as context for all squares in create_empty_chess_board()', function() {
