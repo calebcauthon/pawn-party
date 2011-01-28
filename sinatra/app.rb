@@ -91,16 +91,18 @@ class ChessBoard
 		all_pieces.push(black_bishop)
 		all_pieces.push(black_bishop)
 		
+		white_pawn_locations = ['a7', 'b7', 'c7', 'd7', 'e7', 'f7', 'g7', 'h7']
 		(1..8).each do |i|
 			pawn = ChessPiece.new
-			pawn.location = 'a2'
+			pawn.location = white_pawn_locations[i-1]
 			pawn.piece = 'white pawn'
 			all_pieces.push(pawn)
 		end
 		
+		black_pawn_locations = ['a2', 'b2', 'c2', 'd2', 'e2', 'f2', 'g2', 'h2']
 		(1..8).each do |i|
 			pawn = ChessPiece.new
-			pawn.location = 'a2'
+			pawn.location = black_pawn_locations[i-1]
 			pawn.piece = 'black pawn'
 			all_pieces.push(pawn)
 		end
