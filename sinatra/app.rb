@@ -35,10 +35,17 @@ class ChessBoard
 	def get_starting_board
 		all_pieces = Pieces.new
 	
-		(1..32).each do |i|
+		(1..8).each do |i|
 			pawn = ChessPiece.new
 			pawn.location = 'a2'
 			pawn.piece = 'white pawn'
+			all_pieces.push(pawn)
+		end
+		
+		(1..24).each do |i|
+			pawn = ChessPiece.new
+			pawn.location = 'a2'
+			pawn.piece = 'not a white pawn'
 			all_pieces.push(pawn)
 		end
 		
