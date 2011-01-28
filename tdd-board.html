@@ -28,6 +28,7 @@ $(document).ready(function() {
 		return is_white(image_data) ? false : true;
 	}
 
+		
 	test('board.set_pieces([]) sets a bunch of pieces', function() {
 		var a_board = new board();
 		a_board.squares = a_board.create_empty_chess_board();
@@ -362,6 +363,27 @@ $(document).ready(function() {
 	});
 	test('board class exists', function() {
 		var a_board = new board();
+	});
+	
+	test('square.draw() also calls .draw_image(square.piece.image)', function() {
+		var a_square = new square();
+		var fake_context = {}
+		fake_context.fillRect = function(){}
+		
+		var fake_piece = {}
+		fake_piece.image = 'some_image';
+		
+		a_square.set_piece(fake_piece);
+		a_square.set_context(fake_context);
+		a_square.draw_image = function(image_path) {
+			this.called_draw_image = true;
+			this.called_draw_image_path = image_path;
+		}
+		a_square.draw();
+		
+		equals(a_square.called_draw_image, true);
+		equals(a_square.called_draw_image_path, fake_piece.image);
+		
 	});
 	
 	test('square.draw_image(path) draws an image anchored at .left and .top', function() {
