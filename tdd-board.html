@@ -365,6 +365,30 @@ $(document).ready(function() {
 		var a_board = new board();
 	});
 	
+	
+	test('square.set_piece(piece) sets .piece.image to .get_associated_image(piece.piece)', function() {
+		var a_square = new square();
+		a_square.get_associated_image = function(the_parameter) {
+			this.get_associated_image_parameter = the_parameter;
+			return 'abc_123';
+		}
+		
+		a_square.set_piece({piece: 'cat_dog'});
+		equals(a_square.get_associated_image_parameter, 'cat_dog');
+		equals(a_square.piece.image, 'abc_123');
+	});
+	test('square.set_piece() associates pieces with images', function() {
+		var a_square = new square();
+		var fake_context = {}
+		fake_context.fillRect = function(){}
+		
+		var black_king = {}
+		black_king.piece = 'black king';
+		black_king.location = 'e1';
+		
+		a_square.set_piece(black_king);
+		equals(a_square.piece.image.length > 0, true);
+	});
 	test('square.draw() also calls .draw_image(square.piece.image)', function() {
 		var a_square = new square();
 		var fake_context = {}
