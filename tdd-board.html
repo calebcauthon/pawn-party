@@ -29,6 +29,20 @@ $(document).ready(function() {
 	}
 
 		
+	test('board.set_board_height() sets board and square height', function() {
+		var the_board = new board();
+		the_board.set_board_height(400);
+		
+		the_board.squares = the_board.create_empty_chess_board();
+		equals(the_board.squares[0].height, 400 / 8);
+	});
+	test('board.set_board_width() sets board and square width', function() {
+		var the_board = new board();
+		the_board.set_board_width(400);
+		
+		the_board.squares = the_board.create_empty_chess_board();
+		equals(the_board.squares[0].width, 400 / 8);
+	});
 	test('board.set_pieces([]) sets a bunch of pieces', function() {
 		var a_board = new board();
 		a_board.squares = a_board.create_empty_chess_board();
@@ -49,7 +63,7 @@ $(document).ready(function() {
 		a_board.set_piece({piece: 'white pawn', location: 'a1'});
 		
 		var pawn_square = a_board.get_square('a1');
-		equals(pawn_square.piece, 'white pawn');
+		equals(pawn_square.piece.piece, 'white pawn');
 	});
 	
 	test('board.context is used as context for all squares in create_empty_chess_board()', function() {
@@ -365,7 +379,10 @@ $(document).ready(function() {
 		var a_board = new board();
 	});
 	
-	
+	test('square.get_associated_image() works for white pawn', function() {
+		var the_square = new square();
+		equals(the_square.get_associated_image('white pawn'), '/images/chesspieces/white-pawn.png');
+	});
 	test('square.set_piece(piece) sets .piece.image to .get_associated_image(piece.piece)', function() {
 		var a_square = new square();
 		a_square.get_associated_image = function(the_parameter) {
