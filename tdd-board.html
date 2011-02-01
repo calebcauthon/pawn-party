@@ -28,7 +28,45 @@ $(document).ready(function() {
 		return is_white(image_data) ? false : true;
 	}
 
+	
+	test('board.unhighlight_square(a1) changes squares color back to normal', function() {
+		var the_board = new board();
+		var the_square = new square();
 		
+		the_board.squares = [the_square];
+		the_square.algebraic_notation = 'a1';
+		the_square.draw = function(){}
+		
+		var original_color = the_square.color;
+		
+		the_board.highlight_square('a1');
+		equals(the_square.color != original_color, true);
+		
+		the_board.unhighlight_square('a1');
+		equals(the_square.color, original_color);
+		
+		
+	});
+	test('board.highlight_square(a1) changes a squares color and redraws the square', function() {
+		var the_board = new board();
+		var the_square = new square();
+		
+		the_square.algebraic_notation = 'a1';
+		the_square.color = 'black';
+		the_square.draw = function() {
+			this.has_drawn = true;
+		}
+		the_board.squares = [the_square];
+		
+		equals(the_board.get_square('a1').algebraic_notation, 'a1');
+		equals(the_board.get_square('a1').color, 'black');
+		
+		the_board.highlight_square('a1');
+		equals(the_board.get_square('a1').color != 'black', true);
+		equals(the_square.has_drawn, true);
+		
+		
+	});
 	test('board.set_board_height() sets board and square height', function() {
 		var the_board = new board();
 		the_board.set_board_height(400);
@@ -658,6 +696,7 @@ $(document).ready(function() {
 
 });
 </script>
+<canvas id="highlight_test_1", height="100", width="100"></canvas>
 <canvas id="placement_1" height="100" width="100" style="border: 1px solid red;"></canvas>
 
 <canvas id="click_board_2" height="300" width="300" style="border: 1px solid red;"></canvas>
