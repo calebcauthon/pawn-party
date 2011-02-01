@@ -28,6 +28,23 @@ $(document).ready(function() {
 		return is_white(image_data) ? false : true;
 	}
 
+	test('board.highlight_available_moves(a1) highlights all the available moves for a1', function() {
+		
+	});
+	test('board.highlight_squares([]) calls .highlight_square on the entire array', function() {
+		var the_board = new board();
+		
+		the_board.test_highlighted_squares = [];
+		the_board.highlight_square = function(location) {
+			this.test_highlighted_squares.push(location);
+		}
+		the_board.highlight_squares(['a1', 'a2', 'a3']);
+		
+		equals(the_board.test_highlighted_squares[0], 'a1');
+		equals(the_board.test_highlighted_squares[1], 'a2');
+		equals(the_board.test_highlighted_squares[2], 'a3');
+		
+	});
 	test('board.detect_click_events(canvas) binds click events', function() {
 		var canvas = $('#canvas_element').get(0);
 		var the_board = new board();
