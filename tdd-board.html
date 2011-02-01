@@ -28,6 +28,40 @@ $(document).ready(function() {
 		return is_white(image_data) ? false : true;
 	}
 
+	test('board.detect_click_events(canvas) binds click events', function() {
+		var canvas = $('#canvas_element').get(0);
+		var the_board = new board();
+		
+		the_board.has_been_clicked = false;
+		the_board.click = function() {
+			the_board.has_been_clicked = true;
+		}
+		
+		the_board.detect_click_events(canvas);
+		
+		equals(the_board.has_been_clicked, false);
+		$(canvas).trigger({
+			type: "click",
+			offsetX: 5,
+			offsetY: 5
+		});
+		equals(the_board.has_been_clicked, true);
+	});
+	test('board.make_square_highlightable(a1) binds board.highlight_square() to square.select()', function() {
+		var the_board = new board();
+		the_board.squares = the_board.create_empty_chess_board();
+		
+		the_board.highlight_square = function(location) {
+			this.highlighted_square = location;
+		}
+		
+		the_board.make_square_highlightable('a1');
+		
+		var a1 = the_board.get_square('a1');
+		a1.select();
+		
+		equals(the_board.highlighted_square, 'a1');			
+	});
 	
 	test('board.unhighlight_square(a1) changes squares color back to normal', function() {
 		var the_board = new board();
