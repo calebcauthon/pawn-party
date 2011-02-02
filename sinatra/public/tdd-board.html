@@ -28,7 +28,26 @@ $(document).ready(function() {
 		return is_white(image_data) ? false : true;
 	}
 
-	
+	test('board.highlight_available_moves_on_click() highlights available moves on click', function() {
+		var the_board = new board();
+		the_board.squares = the_board.create_empty_chess_board();
+		
+		var a1 = the_board.get_square('a1');
+		var click_event = {
+			data: { board: the_board },
+			offsetX: a1.left + 1,
+			offsetY: a1.top + 1
+		}
+		
+		the_board.highlight_available_moves = function(location) {
+			the_board.highlighted_available_moves_for = location;
+		}
+		
+		the_board.highlight_available_moves_on_click();
+		the_board.click(click_event);
+		
+		equals(the_board.highlighted_available_moves_for, 'a1');
+	});
 	test('board.click() calls board.select(a1) if a1 is clicked', function() {
 		var the_board = new board();
 		the_board.squares = the_board.create_empty_chess_board();

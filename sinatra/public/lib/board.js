@@ -2,6 +2,9 @@ function board() {
 	this.width = 80;
 	this.height = 80;
 }
+board.prototype.highlight_available_moves_on_click = function() {
+	this.select = this.highlight_available_moves;
+}
 board.prototype.highlight_available_moves = function(algebraic_notation) {
 	var board_to_highlight = this;
 	var fn = function(notations) {

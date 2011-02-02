@@ -49,7 +49,6 @@ square.prototype.get_associated_image = function(piece_name) {
 }
 square.prototype.select = function() {
 	var algebraic_notation = this.algebraic_notation;
-	console.log(algebraic_notation, 'was clicked');
 }
 square.prototype.piece;
 square.prototype.has_piece = function() {
