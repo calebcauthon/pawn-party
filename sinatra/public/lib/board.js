@@ -12,13 +12,33 @@ board.prototype.highlight_available_moves = function(algebraic_notation) {
 	}
 	this.get_available_moves(algebraic_notation, fn);
 }
+board.prototype.get_board_notation = function() {	
+	var notations = [];
+	if(this.squares)
+		for(var i = 0; i < 64; i++)
+		{
+			var this_square = this.squares[i];
+			if(this_square.has_piece())
+				notations.push({
+					"piece": this_square.piece.piece,
+					"algebraic_notation": this_square.algebraic_notation
+				});
+		}
+	
+	return notations;
+}
 board.prototype.get_available_moves = function(algebraic_notation, fn) {
-	var moves_url = 'get_available_moves';
+	var moves_url = '/get_available_moves';
 	var data = {};
+	data.notations = this.get_board_notation();
+	
 	data.algebraic_notation = algebraic_notation;
 	
+	console.log('getting available moves and sending: ', data);
+	console.log($.post);
 	$.post(moves_url, data, function(json) {
 		var response = $.parseJSON(json);
+		console.log(response);
 		fn(response.notations);
 	});
 }

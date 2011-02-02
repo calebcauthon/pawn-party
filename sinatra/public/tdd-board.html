@@ -28,6 +28,59 @@ $(document).ready(function() {
 		return is_white(image_data) ? false : true;
 	}
 
+	test('board.get_available_moves makes ajax call to /get_available_moves', function() {
+		var the_board = new board();
+		
+		var the_url;
+		$.post = function(url, data, fn) {
+			the_url = url;
+		}
+		the_board.get_available_moves();
+		
+		equals(the_url, '/get_available_moves');
+	});
+	
+	test('board.get_board_notations() works for multiple pieces', function() {
+		var the_board = new board();
+		
+		the_board.squares = the_board.create_empty_chess_board();
+		
+		the_board.set_piece({ piece : 'white king', location : 'h1' });
+		the_board.set_piece({ piece : 'black queen', location : 'g7' });
+		
+		var notations = the_board.get_board_notation();
+		equals(notations.length, 2);
+		equals(notations[0].piece == 'white king' || notations[0].piece == 'black queen', true);
+		equals(notations[0].algebraic_notation == 'h1' || notations[0].algebraic_notation == 'g7', true);
+	});
+	test('board.get_board_notation() returns an array of {piece: __, algebraic_notation___} elements', function() {
+		var the_board = new board();
+		
+		the_board.squares = the_board.create_empty_chess_board();
+		
+		var piece = 'white pawn';
+		var location = 'a4';
+		the_board.set_piece({ piece : piece, location : location });
+		
+		var notations = the_board.get_board_notation();
+		equals(notations.length, 1);
+		equals(notations[0].piece, piece);
+		equals(notations[0].algebraic_notation, location);
+	});
+	test('board.get_available_moves sends .notations = .get_board_notation()  in the ajax call', function() {
+		var the_board = new board();
+		
+		var the_data;
+		$.post = function(url, data, fn) {
+			the_data = data;
+		}
+		
+		var injected_notations = 'odjl2i221jdt';
+		the_board.get_board_notation = function() { return injected_notations; }
+		the_board.get_available_moves();
+		
+		equals(the_data.notations, injected_notations);
+	});
 	test('board.highlight_available_moves_on_click() highlights available moves on click', function() {
 		var the_board = new board();
 		the_board.squares = the_board.create_empty_chess_board();
