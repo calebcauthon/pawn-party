@@ -36,3 +36,21 @@ Feature: chess board
 		Then I should see a white pawn at g7
 		Then I should see a white pawn at h7
 		
+		Then I should see a black rook at a1
+		Then I should see a black knight at b1
+		Then I should see a black bishop at c1
+		Then I should see a black queen at d1
+		Then I should see a black king at e1
+		Then I should see a black bishop at f1
+		Then I should see a black knight at g1
+		Then I should see a black rook at h1
+		
+		Then I should see a white rook at a8
+		Then I should see a white knight at b8
+		Then I should see a white bishop at c8
+		Then I should see a white queen at d8
+		Then I should see a white king at e8
+		Then I should see a white bishop at f8
+		Then I should see a white knight at g8
+		Then I should see a white rook at h8
+		
