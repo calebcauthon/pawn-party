@@ -1,0 +1,35 @@
+<script src="lib/jquery.144.js"></script>
+<script src="lib/board.js"></script>
+<script src="lib/square.js"></script>
+
+<canvas id="chess_board" width="500" height="500" style="border: 1px solid black;">
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$.post = function(url, data, fn) {	
+		if(url == 'get_available_moves')
+		{
+			var notations = '{"notations" : ["a3", "a5", "b8"]}';
+			fn(notations);
+		}
+	}
+
+	var chessboard = new board();
+	chessboard.context = $('#chess_board').get(0).getContext('2d');
+	chessboard.set_board_width(490);
+	chessboard.set_board_height(490);
+	chessboard.squares = chessboard.create_empty_chess_board();
+	
+	var pieces = jQuery.parseJSON('[{"location": "e8", "piece": "white king"},{"location": "d8", "piece": "white queen"},{"location": "b8", "piece": "white knight"},{"location": "g8", "piece": "white knight"},{"location": "a8", "piece": "white rook"},{"location": "h8", "piece": "white rook"},{"location": "c8", "piece": "white bishop"},{"location": "f8", "piece": "white bishop"},{"location": "e1", "piece": "black king"},{"location": "d1", "piece": "black queen"},{"location": "b1", "piece": "black knight"},{"location": "g1", "piece": "black knight"},{"location": "a1", "piece": "black rook"},{"location": "h1", "piece": "black rook"},{"location": "c1", "piece": "black bishop"},{"location": "f1", "piece": "black bishop"},{"location": "a7", "piece": "white pawn"},{"location": "b7", "piece": "white pawn"},{"location": "c7", "piece": "white pawn"},{"location": "d7", "piece": "white pawn"},{"location": "e7", "piece": "white pawn"},{"location": "f7", "piece": "white pawn"},{"location": "g7", "piece": "white pawn"},{"location": "h7", "piece": "white pawn"},{"location": "a2", "piece": "black pawn"},{"location": "b2", "piece": "black pawn"},{"location": "c2", "piece": "black pawn"},{"location": "d2", "piece": "black pawn"},{"location": "e2", "piece": "black pawn"},{"location": "f2", "piece": "black pawn"},{"location": "g2", "piece": "black pawn"},{"location": "h2", "piece": "black pawn"}]');
+	chessboard.set_pieces(pieces);
+	
+	chessboard.draw();
+	chessboard.detect_click_events($('#chess_board').get(0));
+	
+
+	chessboard.highlight_available_moves('a1');
+});
+
+
+</script>
