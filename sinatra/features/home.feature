@@ -1,6 +1,15 @@
 Feature: chess board
 
-	Scenario: API
+	Scenario: Getting available moves for a pawn
+		Given the chess board is empty
+		And the pawn is placed on a2
+		And the direction is up
+		When available moves are calculated
+		Then the number of available moves should be 2
+		And one of the available moves should be a3
+		And one of the available moves should be a4
+		
+	Scenario: Getting an empty chess board
 		Given I have created a starting chess board
 		Then I should see 8 pieces named "black pawn"
 		Then I should see 2 pieces named "black rook"

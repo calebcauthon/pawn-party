@@ -32,6 +32,33 @@ class Pieces < Array
 end
 
 class ChessBoard
+	def move_within_file(algebraic_notation, direction, amount) 
+		file = algebraic_notation[0,1]
+		rank = algebraic_notation[1,1]
+		
+		destination_file = file
+		destination_rank = rank.to_i + amount
+		
+		destination = "#{destination_file}#{destination_rank}"
+		destination
+	end
+	def get_available_moves(piece, algebraic_notation, direction)
+		available_moves = Array.new
+		
+		if(piece == :pawn)			
+			move_up_one_notation = self.move_within_file(algebraic_notation, direction, 1)
+			available_moves.push(move_up_one_notation);
+		
+			rank = algebraic_notation[1,1]
+		
+			if(rank.to_i == 2)
+				move_up_two_notation = self.move_within_file(algebraic_notation, direction, 2)
+				available_moves.push(move_up_two_notation);										
+			end
+		end
+		
+		available_moves
+	end
 	def get_starting_board
 		all_pieces = Pieces.new
 		
