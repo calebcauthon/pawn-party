@@ -1,15 +1,39 @@
 Feature: chess board
 
-	Scenario: Getting available moves for a pawn
+	Scenario: Detecting a white piece
 		Given the chess board is empty
-		And the pawn is placed on a2
+		And there is a white pawn on a2
+		Then chessboard should detect a white piece at a2
+
+	Scenario: Detecting a black piece
+		Given the chess board is empty		
+		And there is a black pawn on b4
+		Then chessboard should detect a black piece at b4
+		
+	Scenario: Getting available moves for a home row pawn without anything in front of it
+		Given the chess board is empty
+		And the white pawn is placed on a2
 		And the direction is up
 		When available moves are calculated
 		Then the number of available moves should be 2
 		And one of the available moves should be a3
 		And one of the available moves should be a4
 		
+	Scenario: Getting available moves for a non home row pawn without anything in front of it
+		Given the chess board is empty
+		And the white pawn is placed on a3
+		And the direction is up
+		When available moves are calculated
+		Then the number of available moves should be 1
+		And one of the available moves should be a4
 		
+	Scenario: Getting available moves for a pawn with something in front of it
+		Given the chess board is empty
+		And there is a white pawn on a3
+		And the white pawn is placed on a2
+		And the direction is up
+		When available moves are calculated
+		Then the number of available moves should be 0
 		
 	Scenario: Getting an empty chess board
 		Given I have created a starting chess board
@@ -65,3 +89,12 @@ Feature: chess board
 		And I should see a white knight at g8
 		And I should see a white rook at h8
 		
+	Scenario: Getting available moves for a pawn with a piece to capture
+		Given the chess board is empty
+		And there is a black pawn on b4
+		And the white pawn is placed on a3
+		When available moves are calculated
+		Then the number of available moves should be 2
+		And one of the available moves should be a4
+		And one of the available moves should be b4
+	

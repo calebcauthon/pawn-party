@@ -32,6 +32,36 @@ class Pieces < Array
 end
 
 class ChessBoard
+	def initialize
+		@pieces = Array.new
+	end	
+	
+	def set_piece(piece, algebraic_notation)		
+		@pieces.push({:piece => piece, :algebraic_notation => algebraic_notation})
+	end
+	
+	def has_white_piece(algebraic_notation)
+		@pieces.each do |this_piece|
+			if(this_piece[:piece] =~ /white/)				
+				if(this_piece[:algebraic_notation] == algebraic_notation)
+					return true
+				end
+			end
+		end
+		return false
+	end
+	
+	def has_black_piece(algebraic_notation)
+		@pieces.each do |this_piece|
+			if(this_piece[:piece] =~ /black/)				
+				if(this_piece[:algebraic_notation] == algebraic_notation)
+					return true
+				end
+			end
+		end
+		return false		
+	end
+	
 	def move_within_file(algebraic_notation, direction, amount) 
 		file = algebraic_notation[0,1]
 		rank = algebraic_notation[1,1]
@@ -42,18 +72,39 @@ class ChessBoard
 		destination = "#{destination_file}#{destination_rank}"
 		destination
 	end
+	
+	def move_diagonally_right(algebraic_notation, direction, amount) 
+		file = algebraic_notation[0,1]
+		rank = algebraic_notation[1,1]
+		
+		destination_file = (file[0] + 1).chr
+		destination_rank = rank.to_i + amount
+
+		destination = "#{destination_file}#{destination_rank}"
+		destination		
+	end
+	
 	def get_available_moves(piece, algebraic_notation, direction)
 		available_moves = Array.new
 		
-		if(piece == :pawn)			
+		if(piece == 'white pawn')			
 			move_up_one_notation = self.move_within_file(algebraic_notation, direction, 1)
-			available_moves.push(move_up_one_notation);
+			
+			unless(self.has_white_piece(move_up_one_notation))
+				available_moves.push(move_up_one_notation);
+			end
+		
+			capture_right_notation = self.move_diagonally_right(algebraic_notation, direction, 1)
+			if(self.has_black_piece(capture_right_notation))
+				available_moves.push(capture_right_notation)
+			end
 		
 			rank = algebraic_notation[1,1]
-		
 			if(rank.to_i == 2)
 				move_up_two_notation = self.move_within_file(algebraic_notation, direction, 2)
-				available_moves.push(move_up_two_notation);										
+				unless(self.has_white_piece(move_up_two_notation) || self.has_white_piece(move_up_one_notation))
+					available_moves.push(move_up_two_notation);										
+				end
 			end
 		end
 		
