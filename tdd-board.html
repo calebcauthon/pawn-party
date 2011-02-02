@@ -28,8 +28,52 @@ $(document).ready(function() {
 		return is_white(image_data) ? false : true;
 	}
 
-	test('board.highlight_available_moves(a1) highlights all the available moves for a1', function() {
+	
+	test('board.highlight_available_moves(a1) calls get_available_moves(a1, fn) with a fn that calls .highlight_squares()', function() {
+		var the_board = new board();
 		
+		var the_notation;
+		var the_fn;
+		the_board.get_available_moves = function(algebraic_notation, fn) {
+			the_notation = algebraic_notation;
+			the_fn = fn;
+		}
+		the_board.highlight_squares = function() {
+			the_board.highlighted_squares = true;
+		}
+		the_board.highlight_available_moves('a1');
+		
+		equals(the_notation, 'a1');
+		the_fn();
+		
+		equals(the_board.highlighted_squares, true);
+	});
+	test('board.get_available_moves(a1, fn) makes an ajax call and calls fn response.notations', function() {
+		
+		var the_board = new board();
+		
+		var the_url;
+		var the_data;
+		var the_callback;
+		
+		$.post = function(url, data, callback) {
+				the_url = url;
+				the_data = data;
+				the_callback = callback;
+		}
+		
+		var the_results;
+		var the_fn = function(results) {
+			the_results = results;
+		}
+		the_board.get_available_moves('a1', the_fn);
+		
+		equals(the_url.length > 0, true);
+		equals(the_data.algebraic_notation, 'a1');
+		
+		the_callback('{"notations" : [1,2,3]}');
+		
+		equals(the_results.length, 3);
 	});
 	test('board.highlight_squares([]) calls .highlight_square on the entire array', function() {
 		var the_board = new board();
