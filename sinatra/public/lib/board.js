@@ -61,7 +61,7 @@ board.prototype.set_board_height = function(height) {
 }
 board.prototype.create_empty_chess_board = function() {
 	var squares = [];
-	var next_row_starts_white = true;
+	var next_row_starts_white = false;
 	var ranks = [8, 7, 6, 5, 4, 3, 2, 1];
 	var files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 	
