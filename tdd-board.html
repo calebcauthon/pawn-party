@@ -28,7 +28,25 @@ $(document).ready(function() {
 		return is_white(image_data) ? false : true;
 	}
 
-	
+	test('board.click() calls board.select(a1) if a1 is clicked', function() {
+		var the_board = new board();
+		the_board.squares = the_board.create_empty_chess_board();
+		var c5 = the_board.get_square('c5');
+		var click_event = {
+			data: { board: the_board },
+			offsetX: c5.left + 3,
+			offsetY: c5.top + 3
+		}
+		
+		the_board.select = function(algebraic_notation) {
+			this.selected = algebraic_notation;
+		}
+		the_board.click(click_event);
+		
+		equals(the_board.selected, 'c5');
+		
+		
+	});
 	test('board.highlight_available_moves(a1) calls get_available_moves(a1, fn) with a fn that calls .highlight_squares()', function() {
 		var the_board = new board();
 		
