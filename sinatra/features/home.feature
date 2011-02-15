@@ -276,7 +276,7 @@ Feature: chess board
 		Then the squares marked with a 1 should be the available moves
 		And one of the available moves should be d4
 
-	Scenario: Detecting moves
+	Scenario: Detecting queen moves
 		Given the following chessboard setup:
 		| a | b | c | d | e | f | g | h |rank|
 		| br| 1 | bb| 1 | bK| bb| bk| br| 8  |
@@ -531,3 +531,5 @@ Feature: chess board
 		
 		When available moves are calculated for the black queen at a1
 		Then the number of available moves should be 0
+		
+	

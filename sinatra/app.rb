@@ -120,6 +120,471 @@ class ChessBoard
 		destination = "#{destination_file}#{destination_rank}"
 		destination	
 	end
+	
+	def get_available_moves_from_diagonal_right_backward_movement(piece, algebraic_notation)
+		rank = algebraic_notation[1,1]
+		
+		if(piece =~ /white/)
+			if(rank.to_i == 2)
+				pawn_is_on_home_row = true
+			end
+			color = :white
+			opposing_color = :black
+			direction = :up
+		else
+			if(rank.to_i == 7)
+				pawn_is_on_home_row = true
+			end
+			color = :black
+			opposing_color = :white
+			direction = :down
+		end
+		
+		available_moves = Array.new 
+		
+		keep_moving_diagonally_back_right = true
+		current_position = algebraic_notation
+		
+		if(current_position[1,1].to_i == 8 && direction == :down)
+			keep_moving_diagonally_back_right = false
+		elsif(current_position[1,1].to_i == 1 && direction == :up)
+			keep_moving_diagonally_back_right = false
+		elsif(current_position[0,1].to_s == 'h')
+			keep_moving_diagonally_back_right = false			
+		end
+		
+		while(keep_moving_diagonally_back_right)
+			move_back_diagonally_right_notation = self.move_diagonally_right(current_position, direction, -1)
+			unless(self.has_colored_piece(color, move_back_diagonally_right_notation))
+				available_moves.push(move_back_diagonally_right_notation);
+			end
+			
+			current_position = move_back_diagonally_right_notation
+			if(self.has_colored_piece(color, move_back_diagonally_right_notation))
+				keep_moving_diagonally_back_right = false
+			elsif(self.has_colored_piece(opposing_color, move_back_diagonally_right_notation))
+				keep_moving_diagonally_back_right = false
+			end
+			
+			if(current_position[1,1].to_i == 8 && direction == :down)
+				keep_moving_diagonally_back_right = false
+			elsif(current_position[1,1].to_i == 1 && direction == :up)
+				keep_moving_diagonally_back_right = false
+			elsif(current_position[0,1].to_s == 'h')
+				keep_moving_diagonally_back_right = false			
+			end
+		end
+		available_moves
+	end
+	def get_available_moves_from_diagonal_left_backward_movement(piece, algebraic_notation)
+		rank = algebraic_notation[1,1]
+		
+		if(piece =~ /white/)
+			if(rank.to_i == 2)
+				pawn_is_on_home_row = true
+			end
+			color = :white
+			opposing_color = :black
+			direction = :up
+		else
+			if(rank.to_i == 7)
+				pawn_is_on_home_row = true
+			end
+			color = :black
+			opposing_color = :white
+			direction = :down
+		end
+		
+		available_moves = Array.new
+		
+		keep_moving_diagonally_back_left = true
+		current_position = algebraic_notation
+		
+		if(current_position[1,1].to_i == 8 && direction == :down)
+			keep_moving_diagonally_back_left = false
+		elsif(current_position[1,1].to_i == 1 && direction == :up)
+			keep_moving_diagonally_back_left = false
+		elsif(current_position[0,1].to_s == 'a')
+			keep_moving_diagonally_back_left = false			
+		end
+		
+		while(keep_moving_diagonally_back_left)
+			move_back_diagonally_left_notation = self.move_diagonally_left(current_position, direction, -1)
+			unless(self.has_colored_piece(color, move_back_diagonally_left_notation))
+				available_moves.push(move_back_diagonally_left_notation);
+			end
+			
+			current_position = move_back_diagonally_left_notation
+			if(self.has_colored_piece(color, move_back_diagonally_left_notation))
+				keep_moving_diagonally_back_left = false
+			elsif(self.has_colored_piece(opposing_color, move_back_diagonally_left_notation))
+				keep_moving_diagonally_back_left = false
+			end
+			
+			if(current_position[1,1].to_i == 8 && direction == :down)
+				keep_moving_diagonally_back_left = false
+			elsif(current_position[1,1].to_i == 1 && direction == :up)
+				keep_moving_diagonally_back_left = false
+			elsif(current_position[0,1].to_s == 'a')
+				keep_moving_diagonally_back_left = false			
+			end
+		end
+		available_moves
+	end
+	def get_available_moves_from_diagonal_right_forward_movement(piece, algebraic_notation)
+		rank = algebraic_notation[1,1]
+		
+		if(piece =~ /white/)
+			if(rank.to_i == 2)
+				pawn_is_on_home_row = true
+			end
+			color = :white
+			opposing_color = :black
+			direction = :up
+		else
+			if(rank.to_i == 7)
+				pawn_is_on_home_row = true
+			end
+			color = :black
+			opposing_color = :white
+			direction = :down
+		end
+		
+		keep_moving_diagonally_right = true
+		current_position = algebraic_notation
+		available_moves = Array.new
+		if(current_position[0,1].to_s == 'h')
+			keep_moving_diagonally_right = false
+		elsif(self.move_diagonally_right(current_position, direction, 1)[1,1].to_i == 0)
+			keep_moving_diagonally_right = false
+		elsif(self.move_diagonally_right(current_position, direction, 1)[1,1].to_i == 9)
+			keep_moving_diagonally_right = false
+		end
+
+		while(keep_moving_diagonally_right)
+			move_up_diagonally_right_notation = self.move_diagonally_right(current_position, direction, 1)
+			unless(self.has_colored_piece(color, move_up_diagonally_right_notation))
+				available_moves.push(move_up_diagonally_right_notation);
+			end
+			
+			current_position = move_up_diagonally_right_notation
+			if(self.has_colored_piece(color, move_up_diagonally_right_notation))
+				keep_moving_diagonally_right = false
+			elsif(self.has_colored_piece(opposing_color, move_up_diagonally_right_notation))
+				keep_moving_diagonally_right = false
+			elsif(move_up_diagonally_right_notation[0,1].to_s == 'h')
+				keep_moving_diagonally_right = false
+			end	
+			
+			if(self.move_within_file(current_position, direction, 1)[1,1].to_i == 0)
+				keep_moving_diagonally_right = false
+			elsif(self.move_within_file(current_position, direction, 1)[1,1].to_i == 9)
+				keep_moving_diagonally_right = false
+			end
+		end	
+		
+		available_moves
+	end
+	def get_available_moves_from_diagonal_left_forward_movement(piece, algebraic_notation)
+		rank = algebraic_notation[1,1]
+		
+		if(piece =~ /white/)
+			if(rank.to_i == 2)
+				pawn_is_on_home_row = true
+			end
+			color = :white
+			opposing_color = :black
+			direction = :up
+		else
+			if(rank.to_i == 7)
+				pawn_is_on_home_row = true
+			end
+			color = :black
+			opposing_color = :white
+			direction = :down
+		end
+		
+		available_moves = Array.new
+		keep_moving_diagonally_left = true
+		current_position = algebraic_notation
+		
+		if(self.move_within_file(current_position, direction, 1)[1,1].to_i == 0)
+			keep_moving_diagonally_left = false
+		elsif(self.move_within_file(current_position, direction, 1)[1,1].to_i == 9)
+			keep_moving_diagonally_left = false
+		elsif(current_position[0,1].to_s == 'a')
+			keep_moving_diagonally_left = false
+		end
+		
+		while(keep_moving_diagonally_left)
+			move_up_diagonally_left_notation = self.move_diagonally_left(current_position, direction, 1)
+			unless(self.has_colored_piece(color, move_up_diagonally_left_notation))
+				available_moves.push(move_up_diagonally_left_notation);
+			end
+			
+			current_position = move_up_diagonally_left_notation
+			if(self.has_colored_piece(color, move_up_diagonally_left_notation))
+				keep_moving_diagonally_left = false
+			elsif(self.has_colored_piece(opposing_color, move_up_diagonally_left_notation))
+				keep_moving_diagonally_left = false
+			elsif(move_up_diagonally_left_notation[0,1].to_s == 'a')
+				keep_moving_diagonally_left = false
+			end	
+			
+			if(self.move_within_file(current_position, direction, 1)[1,1].to_i == 0)
+				keep_moving_diagonally_left = false
+			elsif(self.move_within_file(current_position, direction, 1)[1,1].to_i == 9)
+				keep_moving_diagonally_left = false
+			end
+		end
+		available_moves
+	end
+	def get_available_moves_from_forward_movement(piece, algebraic_notation)
+		rank = algebraic_notation[1,1]
+		
+		if(piece =~ /white/)
+			if(rank.to_i == 2)
+				pawn_is_on_home_row = true
+			end
+			color = :white
+			opposing_color = :black
+			direction = :up
+		else
+			if(rank.to_i == 7)
+				pawn_is_on_home_row = true
+			end
+			color = :black
+			opposing_color = :white
+			direction = :down
+		end
+		
+		available_moves = Array.new
+		
+		keep_moving_forward = true
+		current_position = algebraic_notation
+		
+		if(self.move_within_file(current_position, direction, 1)[1,1].to_i == 0)
+			keep_moving_forward = false
+		elsif(self.move_within_file(current_position, direction, 1)[1,1].to_i == 9)
+			keep_moving_forward = false
+		end
+		
+		while(keep_moving_forward)
+			move_up_one_notation = self.move_within_file(current_position, direction, 1)
+			unless(self.has_colored_piece(color, move_up_one_notation))
+				available_moves.push(move_up_one_notation);
+			end
+			
+			current_position = move_up_one_notation
+			if(self.has_colored_piece(color, move_up_one_notation))
+				keep_moving_forward = false
+			elsif(self.has_colored_piece(opposing_color, move_up_one_notation))
+				keep_moving_forward = false
+			end
+			if(self.move_within_file(current_position, direction, 1)[1,1].to_i == 0)
+				keep_moving_forward = false
+			elsif(self.move_within_file(current_position, direction, 1)[1,1].to_i == 9)
+				keep_moving_forward = false
+			end
+		end
+		
+		available_moves
+	end
+	def get_available_moves_from_backward_movement(piece, algebraic_notation)
+		rank = algebraic_notation[1,1]
+		
+		if(piece =~ /white/)
+			if(rank.to_i == 2)
+				pawn_is_on_home_row = true
+			end
+			color = :white
+			opposing_color = :black
+			direction = :up
+		else
+			if(rank.to_i == 7)
+				pawn_is_on_home_row = true
+			end
+			color = :black
+			opposing_color = :white
+			direction = :down
+		end
+		
+		available_moves = Array.new
+		
+		keep_moving_backward = true
+		current_position = algebraic_notation
+		
+		if(current_position[1,1].to_i == 8 && direction == :down)
+			keep_moving_backward = false
+		elsif(current_position[1,1].to_i == 1 && direction == :up)
+			keep_moving_backward = false
+		end
+		
+		while(keep_moving_backward)
+			move_back_one_notation = self.move_within_file(current_position, direction, -1)
+							
+			unless(self.has_colored_piece(color, move_back_one_notation))					
+				available_moves.push(move_back_one_notation);
+			end
+			
+			current_position = move_back_one_notation
+			
+			if(self.has_colored_piece(color, move_back_one_notation))
+				keep_moving_backward = false
+			elsif(self.has_colored_piece(opposing_color, move_back_one_notation))
+				keep_moving_backward = false
+			end
+
+			if(current_position[1,1].to_i == 8 && direction == :down)
+				keep_moving_backward = false
+			elsif(current_position[1,1].to_i == 1 && direction == :up)
+				keep_moving_backward = false
+			end
+		end
+		available_moves
+	end
+	def get_available_moves_from_left_movement(piece, algebraic_notation)
+		rank = algebraic_notation[1,1]
+		
+		if(piece =~ /white/)
+			if(rank.to_i == 2)
+				pawn_is_on_home_row = true
+			end
+			color = :white
+			opposing_color = :black
+			direction = :up
+		else
+			if(rank.to_i == 7)
+				pawn_is_on_home_row = true
+			end
+			color = :black
+			opposing_color = :white
+			direction = :down
+		end
+		
+		available_moves = Array.new
+		
+		keep_moving_left = true
+		current_position = algebraic_notation
+		
+		if(current_position[0,1].to_s == 'a')
+			keep_moving_left = false
+		end
+		
+		while(keep_moving_left)
+			move_left_one_notation = self.move_within_rank(current_position, -1)
+			unless(self.has_colored_piece(color, move_left_one_notation))
+				available_moves.push(move_left_one_notation);
+			end
+			
+			current_position = move_left_one_notation
+			if(self.has_colored_piece(color, move_left_one_notation))
+				keep_moving_left = false
+			elsif(self.has_colored_piece(opposing_color, move_left_one_notation))
+				keep_moving_left = false
+			end
+			
+			if(move_left_one_notation[0,1].to_s == 'a')
+				keep_moving_left = false
+			end
+		end
+		available_moves
+	end
+	def get_available_moves_from_right_movement(piece, algebraic_notation)
+		rank = algebraic_notation[1,1]
+		
+		if(piece =~ /white/)
+			if(rank.to_i == 2)
+				pawn_is_on_home_row = true
+			end
+			color = :white
+			opposing_color = :black
+			direction = :up
+		else
+			if(rank.to_i == 7)
+				pawn_is_on_home_row = true
+			end
+			color = :black
+			opposing_color = :white
+			direction = :down
+		end
+		
+		available_moves = Array.new
+		
+		keep_moving_right = true
+		current_position = algebraic_notation
+		
+		if(current_position[0,1].to_s == 'h')
+			keep_moving_right = false
+		end
+		
+		while(keep_moving_right)
+			move_right_one_notation = self.move_within_rank(current_position, 1)
+			unless(self.has_colored_piece(color, move_right_one_notation))
+				available_moves.push(move_right_one_notation);
+			end
+			
+			current_position = move_right_one_notation
+			if(self.has_colored_piece(color, move_right_one_notation))
+				keep_moving_right = false
+			elsif(self.has_colored_piece(opposing_color, move_right_one_notation))
+				keep_moving_right = false
+			elsif(move_right_one_notation[0,1].to_s == 'h')
+				keep_moving_right = false
+			end
+		end
+		available_moves
+	end
+	def get_all_diagonal_moves(piece, algebraic_notation) 
+		available_moves = Array.new
+		
+		moves_from_moving_diagonally_right = self.get_available_moves_from_diagonal_right_forward_movement(piece, algebraic_notation)
+		moves_from_moving_diagonally_right.each do |this_move|
+			available_moves.push(this_move)
+		end
+		
+		moves_from_moving_diagonally_left = self.get_available_moves_from_diagonal_left_forward_movement(piece, algebraic_notation)
+		moves_from_moving_diagonally_left.each do |this_move|
+			available_moves.push(this_move)
+		end
+		
+		moves_from_moving_diagonally_right_backward = self.get_available_moves_from_diagonal_right_backward_movement(piece, algebraic_notation)
+		moves_from_moving_diagonally_right_backward.each do |this_move|
+			available_moves.push(this_move)
+		end
+		
+		moves_from_moving_diagonally_left_backward = self.get_available_moves_from_diagonal_left_backward_movement(piece, algebraic_notation)
+		moves_from_moving_diagonally_left_backward.each do |this_move|
+			available_moves.push(this_move)
+		end
+		
+		available_moves
+	end
+	def get_all_straight_moves(piece, algebraic_notation)
+		available_moves = Array.new
+		
+		moves_from_moving_right = self.get_available_moves_from_right_movement(piece, algebraic_notation)
+		moves_from_moving_right.each do |this_move|
+			available_moves.push(this_move)
+		end
+		
+		moves_from_moving_left = self.get_available_moves_from_left_movement(piece, algebraic_notation)
+		moves_from_moving_left.each do |this_move|
+			available_moves.push(this_move)
+		end
+		
+		moves_from_moving_backward = self.get_available_moves_from_backward_movement(piece, algebraic_notation)
+		moves_from_moving_backward.each do |this_move|
+			available_moves.push(this_move)
+		end
+		
+		moves_from_moving_forward = self.get_available_moves_from_forward_movement(piece, algebraic_notation)
+		moves_from_moving_forward.each do |this_move|
+			available_moves.push(this_move)
+		end
+		
+		available_moves
+	end
 	def get_available_moves(piece, algebraic_notation)
 		available_moves = Array.new
 		
@@ -141,247 +606,14 @@ class ChessBoard
 			direction = :down
 		end
 		if(piece =~ /queen/)
-			
-			keep_moving_left = true
-			current_position = algebraic_notation
-			
-			if(current_position[0,1].to_s == 'a')
-				keep_moving_left = false
+			moves_from_straight_movements = self.get_all_straight_moves(piece, algebraic_notation)
+			moves_from_straight_movements.each do |this_move|
+				available_moves.push(this_move)
 			end
 			
-			while(keep_moving_left)
-				move_left_one_notation = self.move_within_rank(current_position, -1)
-				unless(self.has_colored_piece(color, move_left_one_notation))
-					available_moves.push(move_left_one_notation);
-				end
-				
-				current_position = move_left_one_notation
-				if(self.has_colored_piece(color, move_left_one_notation))
-					keep_moving_left = false
-				elsif(self.has_colored_piece(opposing_color, move_left_one_notation))
-					keep_moving_left = false
-				end
-				
-				if(move_left_one_notation[0,1].to_s == 'a')
-					keep_moving_left = false
-				end
-			end
-			
-			keep_moving_right = true
-			current_position = algebraic_notation
-			
-			if(current_position[0,1].to_s == 'h')
-				keep_moving_right = false
-			end
-			
-			while(keep_moving_right)
-				move_right_one_notation = self.move_within_rank(current_position, 1)
-				unless(self.has_colored_piece(color, move_right_one_notation))
-					available_moves.push(move_right_one_notation);
-				end
-				
-				current_position = move_right_one_notation
-				if(self.has_colored_piece(color, move_right_one_notation))
-					keep_moving_right = false
-				elsif(self.has_colored_piece(opposing_color, move_right_one_notation))
-					keep_moving_right = false
-				elsif(move_right_one_notation[0,1].to_s == 'h')
-					keep_moving_right = false
-				end
-			end
-			
-			
-			
-			keep_moving_backward = true
-			current_position = algebraic_notation
-			
-			if(current_position[1,1].to_i == 8 && direction == :down)
-				keep_moving_backward = false
-			elsif(current_position[1,1].to_i == 1 && direction == :up)
-				keep_moving_backward = false
-			end
-			
-			while(keep_moving_backward)
-				move_back_one_notation = self.move_within_file(current_position, direction, -1)
-								
-				unless(self.has_colored_piece(color, move_back_one_notation))					
-					available_moves.push(move_back_one_notation);
-				end
-				
-				current_position = move_back_one_notation
-				
-				if(self.has_colored_piece(color, move_back_one_notation))
-					keep_moving_backward = false
-				elsif(self.has_colored_piece(opposing_color, move_back_one_notation))
-					keep_moving_backward = false
-				end
-
-				if(current_position[1,1].to_i == 8 && direction == :down)
-					keep_moving_backward = false
-				elsif(current_position[1,1].to_i == 1 && direction == :up)
-					keep_moving_backward = false
-				end
-			end
-			
-			keep_moving_forward = true
-			current_position = algebraic_notation
-			
-			if(self.move_within_file(current_position, direction, 1)[1,1].to_i == 0)
-				keep_moving_forward = false
-			elsif(self.move_within_file(current_position, direction, 1)[1,1].to_i == 9)
-				keep_moving_forward = false
-			end
-			
-			while(keep_moving_forward)
-				move_up_one_notation = self.move_within_file(current_position, direction, 1)
-				unless(self.has_colored_piece(color, move_up_one_notation))
-					available_moves.push(move_up_one_notation);
-				end
-				
-				current_position = move_up_one_notation
-				if(self.has_colored_piece(color, move_up_one_notation))
-					keep_moving_forward = false
-				elsif(self.has_colored_piece(opposing_color, move_up_one_notation))
-					keep_moving_forward = false
-				end
-				if(self.move_within_file(current_position, direction, 1)[1,1].to_i == 0)
-					keep_moving_forward = false
-				elsif(self.move_within_file(current_position, direction, 1)[1,1].to_i == 9)
-					keep_moving_forward = false
-				end
-			end
-			
-			keep_moving_diagonally_right = true
-			current_position = algebraic_notation
-			
-			if(current_position[0,1].to_s == 'h')
-				keep_moving_diagonally_right = false
-			elsif(self.move_diagonally_right(current_position, direction, 1)[1,1].to_i == 0)
-				keep_moving_diagonally_right = false
-			elsif(self.move_diagonally_right(current_position, direction, 1)[1,1].to_i == 9)
-				keep_moving_diagonally_right = false
-			end
-
-			while(keep_moving_diagonally_right)
-				move_up_diagonally_right_notation = self.move_diagonally_right(current_position, direction, 1)
-				unless(self.has_colored_piece(color, move_up_diagonally_right_notation))
-					available_moves.push(move_up_diagonally_right_notation);
-				end
-				
-				current_position = move_up_diagonally_right_notation
-				if(self.has_colored_piece(color, move_up_diagonally_right_notation))
-					keep_moving_diagonally_right = false
-				elsif(self.has_colored_piece(opposing_color, move_up_diagonally_right_notation))
-					keep_moving_diagonally_right = false
-				elsif(move_up_diagonally_right_notation[0,1].to_s == 'h')
-					keep_moving_diagonally_right = false
-				end	
-				
-				if(self.move_within_file(current_position, direction, 1)[1,1].to_i == 0)
-					keep_moving_diagonally_right = false
-				elsif(self.move_within_file(current_position, direction, 1)[1,1].to_i == 9)
-					keep_moving_diagonally_right = false
-				end
-			end
-			
-			keep_moving_diagonally_left = true
-			current_position = algebraic_notation
-			
-			if(self.move_within_file(current_position, direction, 1)[1,1].to_i == 0)
-				keep_moving_diagonally_left = false
-			elsif(self.move_within_file(current_position, direction, 1)[1,1].to_i == 9)
-				keep_moving_diagonally_left = false
-			elsif(current_position[0,1].to_s == 'a')
-				keep_moving_diagonally_left = false
-			end
-			
-			while(keep_moving_diagonally_left)
-				move_up_diagonally_left_notation = self.move_diagonally_left(current_position, direction, 1)
-				unless(self.has_colored_piece(color, move_up_diagonally_left_notation))
-					available_moves.push(move_up_diagonally_left_notation);
-				end
-				
-				current_position = move_up_diagonally_left_notation
-				if(self.has_colored_piece(color, move_up_diagonally_left_notation))
-					keep_moving_diagonally_left = false
-				elsif(self.has_colored_piece(opposing_color, move_up_diagonally_left_notation))
-					keep_moving_diagonally_left = false
-				elsif(move_up_diagonally_left_notation[0,1].to_s == 'a')
-					keep_moving_diagonally_left = false
-				end	
-				
-				if(self.move_within_file(current_position, direction, 1)[1,1].to_i == 0)
-					keep_moving_diagonally_left = false
-				elsif(self.move_within_file(current_position, direction, 1)[1,1].to_i == 9)
-					keep_moving_diagonally_left = false
-				end
-			end
-			
-			
-			keep_moving_diagonally_back_right = true
-			current_position = algebraic_notation
-			
-			if(current_position[1,1].to_i == 8 && direction == :down)
-				keep_moving_diagonally_back_right = false
-			elsif(current_position[1,1].to_i == 1 && direction == :up)
-				keep_moving_diagonally_back_right = false
-			elsif(current_position[0,1].to_s == 'h')
-				keep_moving_diagonally_back_right = false			
-			end
-			
-			while(keep_moving_diagonally_back_right)
-				move_back_diagonally_right_notation = self.move_diagonally_right(current_position, direction, -1)
-				unless(self.has_colored_piece(color, move_back_diagonally_right_notation))
-					available_moves.push(move_back_diagonally_right_notation);
-				end
-				
-				current_position = move_back_diagonally_right_notation
-				if(self.has_colored_piece(color, move_back_diagonally_right_notation))
-					keep_moving_diagonally_back_right = false
-				elsif(self.has_colored_piece(opposing_color, move_back_diagonally_right_notation))
-					keep_moving_diagonally_back_right = false
-				end
-				
-				if(current_position[1,1].to_i == 8 && direction == :down)
-					keep_moving_diagonally_back_right = false
-				elsif(current_position[1,1].to_i == 1 && direction == :up)
-					keep_moving_diagonally_back_right = false
-				elsif(current_position[0,1].to_s == 'h')
-					keep_moving_diagonally_back_right = false			
-				end
-			end
-			
-			keep_moving_diagonally_back_left = true
-			current_position = algebraic_notation
-			
-			if(current_position[1,1].to_i == 8 && direction == :down)
-				keep_moving_diagonally_back_left = false
-			elsif(current_position[1,1].to_i == 1 && direction == :up)
-				keep_moving_diagonally_back_left = false
-			elsif(current_position[0,1].to_s == 'a')
-				keep_moving_diagonally_back_left = false			
-			end
-			
-			while(keep_moving_diagonally_back_left)
-				move_back_diagonally_left_notation = self.move_diagonally_left(current_position, direction, -1)
-				unless(self.has_colored_piece(color, move_back_diagonally_left_notation))
-					available_moves.push(move_back_diagonally_left_notation);
-				end
-				
-				current_position = move_back_diagonally_left_notation
-				if(self.has_colored_piece(color, move_back_diagonally_left_notation))
-					keep_moving_diagonally_back_left = false
-				elsif(self.has_colored_piece(opposing_color, move_back_diagonally_left_notation))
-					keep_moving_diagonally_back_left = false
-				end
-				
-				if(current_position[1,1].to_i == 8 && direction == :down)
-					keep_moving_diagonally_back_left = false
-				elsif(current_position[1,1].to_i == 1 && direction == :up)
-					keep_moving_diagonally_back_left = false
-				elsif(current_position[0,1].to_s == 'a')
-					keep_moving_diagonally_back_left = false			
-				end
+			moves_from_diagonal_movements = self.get_all_diagonal_moves(piece, algebraic_notation)
+			moves_from_diagonal_movements.each do |this_move|
+				available_moves.push(this_move)
 			end
 		end
 		if(piece =~ /knight/)
