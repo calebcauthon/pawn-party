@@ -178,6 +178,39 @@ class ChessBoard
 				end
 			end
 			
+			
+			
+			keep_moving_backward = true
+			current_position = algebraic_notation
+			
+			if(current_position[1,1].to_i == 8 && direction == :down)
+				keep_moving_backward = false
+			elsif(current_position[1,1].to_i == 1 && direction == :up)
+				keep_moving_backward = false
+			end
+			
+			while(keep_moving_backward)
+				move_back_one_notation = self.move_within_file(current_position, direction, -1)
+								
+				unless(self.has_colored_piece(color, move_back_one_notation))					
+					available_moves.push(move_back_one_notation);
+				end
+				
+				current_position = move_back_one_notation
+				
+				if(self.has_colored_piece(color, move_back_one_notation))
+					keep_moving_backward = false
+				elsif(self.has_colored_piece(opposing_color, move_back_one_notation))
+					keep_moving_backward = false
+				end
+
+				if(current_position[1,1].to_i == 8 && direction == :down)
+					keep_moving_backward = false
+				elsif(current_position[1,1].to_i == 1 && direction == :up)
+					keep_moving_backward = false
+				end
+			end
+			
 			keep_moving_forward = true
 			current_position = algebraic_notation
 			while(keep_moving_forward)
@@ -230,6 +263,73 @@ class ChessBoard
 				elsif(move_up_diagonally_left_notation[0,1].to_s == 'a')
 					keep_moving_diagonally_left = false
 				end	
+			end
+			
+			
+			keep_moving_diagonally_back_right = true
+			current_position = algebraic_notation
+			
+			if(current_position[1,1].to_i == 8 && direction == :down)
+				keep_moving_diagonally_back_right = false
+			elsif(current_position[1,1].to_i == 1 && direction == :up)
+				keep_moving_diagonally_back_right = false
+			elsif(current_position[0,1].to_s == 'h')
+				keep_moving_diagonally_back_right = false			
+			end
+			
+			while(keep_moving_diagonally_back_right)
+				move_back_diagonally_right_notation = self.move_diagonally_right(current_position, direction, -1)
+				unless(self.has_colored_piece(color, move_back_diagonally_right_notation))
+					available_moves.push(move_back_diagonally_right_notation);
+				end
+				
+				current_position = move_back_diagonally_right_notation
+				if(self.has_colored_piece(color, move_back_diagonally_right_notation))
+					keep_moving_diagonally_back_right = false
+				elsif(self.has_colored_piece(opposing_color, move_back_diagonally_right_notation))
+					keep_moving_diagonally_back_right = false
+				end
+				
+				if(current_position[1,1].to_i == 8 && direction == :down)
+					keep_moving_diagonally_back_right = false
+				elsif(current_position[1,1].to_i == 1 && direction == :up)
+					keep_moving_diagonally_back_right = false
+				elsif(current_position[0,1].to_s == 'a')
+					keep_moving_diagonally_back_right = false			
+				end
+			end
+			
+			keep_moving_diagonally_back_left = true
+			current_position = algebraic_notation
+			
+			if(current_position[1,1].to_i == 8 && direction == :down)
+				keep_moving_diagonally_back_left = false
+			elsif(current_position[1,1].to_i == 1 && direction == :up)
+				keep_moving_diagonally_back_left = false
+			elsif(current_position[0,1].to_s == 'a')
+				keep_moving_diagonally_back_left = false			
+			end
+			
+			while(keep_moving_diagonally_back_left)
+				move_back_diagonally_left_notation = self.move_diagonally_left(current_position, direction, -1)
+				unless(self.has_colored_piece(color, move_back_diagonally_left_notation))
+					available_moves.push(move_back_diagonally_left_notation);
+				end
+				
+				current_position = move_back_diagonally_left_notation
+				if(self.has_colored_piece(color, move_back_diagonally_left_notation))
+					keep_moving_diagonally_back_left = false
+				elsif(self.has_colored_piece(opposing_color, move_back_diagonally_left_notation))
+					keep_moving_diagonally_back_left = false
+				end
+				
+				if(current_position[1,1].to_i == 8 && direction == :down)
+					keep_moving_diagonally_back_left = false
+				elsif(current_position[1,1].to_i == 1 && direction == :up)
+					keep_moving_diagonally_back_left = false
+				elsif(current_position[0,1].to_s == 'a')
+					keep_moving_diagonally_back_left = false			
+				end
 			end
 		end
 		if(piece =~ /knight/)

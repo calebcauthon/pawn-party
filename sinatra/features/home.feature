@@ -397,5 +397,19 @@ Feature: chess board
 		When available moves are calculated for the black queen at d8
 		Then the squares marked with a 1 should be the available moves		
 		And the number of available moves should be 21		
+	
+	Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		| 1 |   |   | 1 |   |   | 1 |   | 8  |
+		|   | 1 |   | 1 |   | 1 |   |   | 7  |
+		|   |   | 1 | 1 | 1 |   |   |   | 6  |
+		| 1 | 1 | 1 | bq| 1 | 1 | 1 | 1 | 5  |
+		|   |   | 1 | 1 | 1 |   |   |   | 4  |
+		|   | 1 |   | 1 |   | 1 |   |   | 3  |
+		| 1 |   |   | 1 |   |   | 1 |   | 2  |
+		|   |   |   | 1 |   |   |   | 1 | 1  |
 		
+		When available moves are calculated for the black queen at d5
+		Then the squares marked with a 1 should be the available moves		
+		And the number of available moves should be 27		
 		
