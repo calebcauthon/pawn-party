@@ -54,10 +54,7 @@ Given /^the following chessboard setup:$/ do |table|
 	
 	all_pieces = Array.new
 	pieces_in_this_row = Array.new
-	
-	#algebraic_notation = "#{file}#{rank}"
-	#@chessboard.set_piece(piece, algebraic_notation)
-	
+
 	table.hashes.each do |hash|
 		print "\n#{hash["a"]}, #{hash["rank"]}"
 		
@@ -143,9 +140,6 @@ Given /^the following chessboard setup:$/ do |table|
 		end
 	end
 	
-	@algebraic_notation = "a1"
-	@piece = 'white pawn'
-	
 	all_pieces.each do |this_piece|
 		file = this_piece[:file]
 		rank = this_piece[:rank]			
@@ -179,6 +173,5 @@ Given /^the following chessboard setup:$/ do |table|
 		
 		algebraic_notation = "#{file}#{rank}"
 		@chessboard.set_piece(piece, algebraic_notation)
-		#print "\ntheres a piece in this row, piece=#{this_piece[:piece]}, rank=#{this_piece[:rank]}, file=#{this_piece[:file]}\n"
 	end
 end
