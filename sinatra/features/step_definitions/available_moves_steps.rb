@@ -59,28 +59,87 @@ Given /^the following chessboard setup:$/ do |table|
 	#@chessboard.set_piece(piece, algebraic_notation)
 	
 	table.hashes.each do |hash|
-		hash.each do |file_or_attribute_name, piece_or_rank|	
-			if(file_or_attribute_name == "rank")
-				rank = piece_or_rank
-				
-				pieces_in_this_row.each do |this_row_piece|
-					this_row_piece[:rank] = rank
-					all_pieces.push(this_row_piece)
-				end
-				
-				pieces_in_this_row = Array.new
-			else			
-				file = file_or_attribute_name
-				piece = piece_or_rank
-				
-				this_piece = Hash.new
-				this_piece[:file] = file
-				this_piece[:piece] = piece
-				
-				if(piece != "")
-					pieces_in_this_row.push(this_piece)
-				end
-			end			
+		print "\n#{hash["a"]}, #{hash["rank"]}"
+		
+		unless(hash["a"] == "")
+			file = "a"
+			rank = hash["rank"]
+			piece = hash["a"]
+			this_piece = Hash.new
+			this_piece[:file] = file
+			this_piece[:rank] = rank
+			this_piece[:piece] = piece
+			all_pieces.push(this_piece)
+		end
+		unless(hash["b"] == "")
+			file = "b"
+			rank = hash["rank"]
+			piece = hash["b"]
+			this_piece = Hash.new
+			this_piece[:file] = file
+			this_piece[:rank] = rank
+			this_piece[:piece] = piece
+			all_pieces.push(this_piece)
+		end
+		unless(hash["c"] == "")
+			file = "c"
+			rank = hash["rank"]
+			piece = hash["c"]
+			this_piece = Hash.new
+			this_piece[:file] = file
+			this_piece[:rank] = rank
+			this_piece[:piece] = piece
+			all_pieces.push(this_piece)
+		end
+		unless(hash["d"] == "")
+			file = "d"
+			rank = hash["rank"]
+			piece = hash["d"]
+			this_piece = Hash.new
+			this_piece[:file] = file
+			this_piece[:rank] = rank
+			this_piece[:piece] = piece
+			all_pieces.push(this_piece)
+		end
+		unless(hash["e"] == "")
+			file = "e"
+			rank = hash["rank"]
+			piece = hash["e"]
+			this_piece = Hash.new
+			this_piece[:file] = file
+			this_piece[:rank] = rank
+			this_piece[:piece] = piece
+			all_pieces.push(this_piece)
+		end
+		unless(hash["f"] == "")
+			file = "f"
+			rank = hash["rank"]
+			piece = hash["f"]
+			this_piece = Hash.new
+			this_piece[:file] = file
+			this_piece[:rank] = rank
+			this_piece[:piece] = piece
+			all_pieces.push(this_piece)
+		end
+		unless(hash["g"] == "")
+			file = "g"
+			rank = hash["rank"]
+			piece = hash["g"]
+			this_piece = Hash.new
+			this_piece[:file] = file
+			this_piece[:rank] = rank
+			this_piece[:piece] = piece
+			all_pieces.push(this_piece)
+		end
+		unless(hash["h"] == "")
+			file = "h"
+			rank = hash["rank"]
+			piece = hash["h"]
+			this_piece = Hash.new
+			this_piece[:file] = file
+			this_piece[:rank] = rank
+			this_piece[:piece] = piece
+			all_pieces.push(this_piece)
 		end
 	end
 	
@@ -91,14 +150,35 @@ Given /^the following chessboard setup:$/ do |table|
 		file = this_piece[:file]
 		rank = this_piece[:rank]			
 		piece_abbreviation = this_piece[:piece]
+		
 		if(piece_abbreviation == 'wp')
 			piece = "white pawn"
+		elsif(piece_abbreviation == 'wr')
+			piece = "white rook"
+		elsif(piece_abbreviation == 'wk')
+			piece = "white knight"
+		elsif(piece_abbreviation == 'wb')
+			piece = "white bishop"
+		elsif(piece_abbreviation == 'wK')
+			piece = "white king"
+		elsif(piece_abbreviation == 'wq')
+			piece = "white queen"
 		elsif(piece_abbreviation == 'bp')
 			piece = "black pawn"
+		elsif(piece_abbreviation == 'br')
+			piece = "black rook"
+		elsif(piece_abbreviation == 'bk')
+			piece = "black knight"
+		elsif(piece_abbreviation == 'bb')
+			piece = "black bishop"
+		elsif(piece_abbreviation == 'bK')
+			piece = "black king"
+		elsif(piece_abbreviation == 'bq')
+			piece = "black queen"
 		end		
 		
 		algebraic_notation = "#{file}#{rank}"
 		@chessboard.set_piece(piece, algebraic_notation)
-		#print "theres a piece in this row, piece=#{this_piece[:piece]}, rank=#{this_piece[:rank]}, file=#{this_piece[:file]}\n"
+		#print "\ntheres a piece in this row, piece=#{this_piece[:piece]}, rank=#{this_piece[:rank]}, file=#{this_piece[:file]}\n"
 	end
 end

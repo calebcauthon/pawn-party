@@ -1,30 +1,4 @@
 Feature: chess board
-
-	Scenario: Detecting a white piece
-		Given the chess board is empty
-		And there is a white pawn on a2
-		Then chessboard should detect a white piece at a2
-
-	Scenario: Detecting a black piece
-		Given the chess board is empty		
-		And there is a black pawn on b4
-		Then chessboard should detect a black piece at b4
-		
-	Scenario: Getting available moves for a home row pawn without anything in front of it
-		Given the chess board is empty
-		And the white pawn is placed on a2
-		When available moves are calculated
-		Then the number of available moves should be 2
-		And one of the available moves should be a3
-		And one of the available moves should be a4
-		
-	Scenario: Getting available moves for a non home row pawn without anything in front of it
-		Given the chess board is empty
-		And the white pawn is placed on a3
-		When available moves are calculated
-		Then the number of available moves should be 1
-		And one of the available moves should be a4
-		
 	Scenario: Getting an empty chess board
 		Given I have created a starting chess board
 		Then I should see 8 pieces named "black pawn"
@@ -138,3 +112,89 @@ Feature: chess board
 		|   |   |   |   |   |   |   |   | 1  |
 		When available moves are calculated for the white pawn at a2
 		Then the number of available moves should be 0
+		
+	Scenario: Getting available moves for a non home row pawn without anything in front of it
+		Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		|   |   |   |   |   |   |   |   | 8  |
+		|   |   |   |   |   |   |   |   | 7  |
+		|   |   |   |   |   |   |   |   | 6  |
+		|   |   |   |   |   |   |   |   | 5  |
+		|   |   |   |   |   |   |   |   | 4  |
+		| wp|   |   |   |   |   |   |   | 3  |
+		|   |   |   |   |   |   |   |   | 2  |
+		|   |   |   |   |   |   |   |   | 1  |
+		When available moves are calculated for the white pawn at a3
+		Then the number of available moves should be 1
+		And one of the available moves should be a4		
+	
+	Scenario: Getting available moves for a home row pawn without anything in front of it
+		Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		|   |   |   |   |   |   |   |   | 8  |
+		|   |   |   |   |   |   |   |   | 7  |
+		|   |   |   |   |   |   |   |   | 6  |
+		|   |   |   |   |   |   |   |   | 5  |
+		|   |   |   |   |   |   |   |   | 4  |
+		|   |   |   |   |   |   |   |   | 3  |
+		| wp|   |   |   |   |   |   |   | 2  |
+		|   |   |   |   |   |   |   |   | 1  |
+		When available moves are calculated for the white pawn at a2
+		Then the number of available moves should be 2
+		And one of the available moves should be a3
+		And one of the available moves should be a4
+
+	Scenario: Detecting a white piece
+		Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		|   |   |   |   |   |   |   |   | 8  |
+		|   |   |   |   |   |   |   |   | 7  |
+		|   |   |   |   |   |   |   |   | 6  |
+		|   |   |   |   |   |   |   |   | 5  |
+		|   |   |   |   |   |   |   |   | 4  |
+		|   |   |   |   |   |   |   |   | 3  |
+		| wp|   |   |   |   |   |   |   | 2  |
+		|   |   |   |   |   |   |   |   | 1  |		
+		Then chessboard should detect a white piece at a2
+
+	Scenario: Detecting a black piece
+		Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		|   |   |   |   |   |   |   |   | 8  |
+		|   |   |   |   |   |   |   |   | 7  |
+		|   |   |   |   |   |   |   |   | 6  |
+		|   |   |   |   |   |   |   |   | 5  |
+		|   | bp|   |   |   |   |   |   | 4  |
+		|   |   |   |   |   |   |   |   | 3  |
+		|   |   |   |   |   |   |   |   | 2  |
+		|   |   |   |   |   |   |   |   | 1  |
+		Then chessboard should detect a black piece at b4	
+	Scenario: Detecting a black piece
+		Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		| br| bk| bb| bq| bK| bb| bk| br| 8  |
+		| bp| bp| bp| bp| bp| bp| bp| bp| 7  |
+		|   |   |   |   |   |   |   |   | 6  |
+		|   |   |   |   |   |   |   |   | 5  |
+		|   |   |   |   |   |   |   |   | 4  |
+		|   |   |   |   |   |   |   |   | 3  |
+		| wp| wp| wp| wp| wp| wp| wp| wp| 2  |
+		| wr| wk| wb| wK| wq| wb| wk| wr| 1  |
+		Then chessboard should detect a black piece at a7	
+		Then chessboard should detect a black piece at b7	
+		Then chessboard should detect a black piece at c7	
+		Then chessboard should detect a black piece at d7	
+		Then chessboard should detect a black piece at e7	
+		Then chessboard should detect a black piece at f7	
+		Then chessboard should detect a black piece at g7	
+		Then chessboard should detect a black piece at h7	
+		
+		Then chessboard should detect a black piece at a8	
+		Then chessboard should detect a black piece at b8	
+		Then chessboard should detect a black piece at c8	
+		Then chessboard should detect a black piece at d8	
+		Then chessboard should detect a black piece at e8	
+		Then chessboard should detect a black piece at f8	
+		Then chessboard should detect a black piece at g8	
+		Then chessboard should detect a black piece at h8
+		
