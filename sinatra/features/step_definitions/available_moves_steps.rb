@@ -56,8 +56,6 @@ Given /^the following chessboard setup:$/ do |table|
 	pieces_in_this_row = Array.new
 
 	table.hashes.each do |hash|
-		print "\n#{hash["a"]}, #{hash["rank"]}"
-		
 		unless(hash["a"] == "")
 			file = "a"
 			rank = hash["rank"]

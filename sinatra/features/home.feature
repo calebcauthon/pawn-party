@@ -198,3 +198,27 @@ Feature: chess board
 		Then chessboard should detect a black piece at g8	
 		Then chessboard should detect a black piece at h8
 		
+	Scenario: Detecting moves
+		Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		| br| bk| bb| bq| bK| bb| bk| br| 8  |
+		| bp| bp| bp| bp| bp| bp| bp| bp| 7  |
+		|   |   |   |   |   |   |   |   | 6  |
+		|   |   |   |   |   |   |   |   | 5  |
+		|   |   |   |   |   |   |   |   | 4  |
+		|   |   |   |   |   |   |   |   | 3  |
+		| wp| wp| wp| wp| wp| wp| wp| wp| 2  |
+		| wr| wk| wb| wK| wq| wb| wk| wr| 1  |		
+		
+		When available moves are calculated for the white pawn at a2
+		Then one of the available moves should be a3
+		Then one of the available moves should be a4
+		
+		When available moves are calculated for the white pawn at f2
+		Then one of the available moves should be f3
+		Then one of the available moves should be f4
+		
+		When available moves are calculated for the black pawn at a7
+		Then one of the available moves should be a6
+		Then one of the available moves should be a5
+		
