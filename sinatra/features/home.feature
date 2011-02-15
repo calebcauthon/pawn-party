@@ -229,5 +229,83 @@ Feature: chess board
 		When available moves are calculated for the black knight at b8
 		Then one of the available moves should be c6
 		And one of the available moves should be a6
+	
+	Scenario: Detecting moves
+		Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		| br| bk| bb| bq| bK| bb| bk| br| 8  |
+		| bp| bp| bp| bp| bp| bp| bp| bp| 7  |
+		|   |   |   |   |   |   |   |   | 6  |
+		|   | 1 |   | 1 |   |   |   |   | 5  |
+		| 1 |   |   |   | 1 |   |   |   | 4  |
+		|   |   | wk|   |   |   |   |   | 3  |
+		| 1 | wp| wp| wp| 1 | wp| wp| wp| 2  |
+		| wr| 1 | wb| 1 | wq| wb| wk| wr| 1  |			
+		
+		When available moves are calculated for the white knight at c3
+		Then the squares marked with a 1 should be the available moves
+
+	Scenario: Detecting moves
+		Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		| br| 1 | bb| 1 | bK| bb| bk| br| 8  |
+		| 1 | bp| bp| bp| 1 | bp| bp| bp| 7  |
+		|   |   | bk|   |   |   |   |   | 6  |
+		| 1 |   |   |   | 1 |   |   |   | 5  |
+		|   | 1 |   | 1 |   |   |   |   | 4  |
+		|   |   |   |   |   |   |   |   | 3  |
+		| wp| wp| wp| wp| wp| wp| wp| wp| 2  |
+		| wr| wk| wb| wK| wq| wb| wk| wr| 1  |			
+		
+		When available moves are calculated for the black knight at c6
+		Then the squares marked with a 1 should be the available moves	
+	
+	Scenario: Detecting moves
+		Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		| br| 1 | bb| 1 | bK| bb| bk| br| 8  |
+		| 1 | bp| bp| bp| 1 | bp| bp| bp| 7  |
+		|   |   | bk|   |   |   |   |   | 6  |
+		| 1 |   |   |   | 1 |   |   |   | 5  |
+		|   | 1 |   | wp|   |   |   |   | 4  |
+		|   |   |   |   |   |   |   |   | 3  |
+		| wp| wp| wp| wp| wp| wp| wp| wp| 2  |
+		| wr| wk| wb| wK| wq| wb| wk| wr| 1  |			
+		
+		When available moves are calculated for the black knight at c6
+		Then the squares marked with a 1 should be the available moves
+		And one of the available moves should be d4
+
+	Scenario: Detecting moves
+		Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		| br| 1 | bb| 1 | bK| bb| bk| br| 8  |
+		| 1 | bp| bp| bp| 1 | bp| bp| bp| 7  |
+		|   |   | bk|   |   |   |   |   | 6  |
+		| 1 |   |   |   | 1 |   |   |   | 5  |
+		|   | 1 |   | bp|   |   |   |   | 4  |
+		|   |   |   |   |   |   |   |   | 3  |
+		| wp| wp| wp| wp| wp| wp| wp| wp| 2  |
+		| wr| wk| wb| wK| wq| wb| wk| wr| 1  |			
+		
+		When available moves are calculated for the black knight at c6
+		Then the squares marked with a 1 should be the available moves
+		And none of the available moves should be d4
+		
+	Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		| br| bk| bb| bq| bK| bb| bk| br| 8  |
+		| bp| bp| bp| 1 | bp| bp| bp| bp| 7  |
+		|   |   |   | 1 |   |   |   |   | 6  |
+		|   |   |   | 1 |   |   |   |   | 5  |
+		|   |   |   | 1 |   |   |   |   | 4  |
+		|   |   |   | 1 |   |   |   |   | 3  |
+		| wp| wp| wp| wp| wp| wp| wp| wp| 2  |
+		| wr| wk| wb| wK| wq| wb| wk| wr| 1  |
+		
+		When available moves are calculated for the black queen at d8
+		Then the squares marked with a 1 should be the available moves
+		And one of the available moves should be d2
+		And the number of available moves should be 6
 		
 		

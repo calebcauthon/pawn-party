@@ -49,6 +49,34 @@ Then /^one of the available moves should be ([a-h]{1})(\d+)$/ do |file, rank|
 	found.should == 1
 end
 
+Then /^none of the available moves should be ([a-h]{1})(\d+)$/ do |file, rank|
+	expected_algebraic_notation = "#{file}#{rank}"
+	found = 0
+	@available_moves.each do |this_algebraic_notation|
+		if(this_algebraic_notation == expected_algebraic_notation)
+			found += 1
+		end
+	end
+	
+	found.should == 0
+end
+
+Then /^the squares marked with a (\d+) should be the available moves$/ do |marker|
+	@chessboard.pieces.each do |this_piece|
+		if(this_piece[:piece] == marker)			
+			expected_algebraic_notation = this_piece[:algebraic_notation]
+			found = 0
+			@available_moves.each do |this_algebraic_notation|
+				if(this_algebraic_notation == expected_algebraic_notation)
+					found += 1
+				end
+			end
+			
+			found.should == 1
+		end
+	end
+end
+
 Given /^the following chessboard setup:$/ do |table|
 	@chessboard = ChessBoard.new
 	
@@ -167,6 +195,8 @@ Given /^the following chessboard setup:$/ do |table|
 			piece = "black king"
 		elsif(piece_abbreviation == 'bq')
 			piece = "black queen"
+		else
+			piece = piece_abbreviation
 		end		
 		
 		algebraic_notation = "#{file}#{rank}"

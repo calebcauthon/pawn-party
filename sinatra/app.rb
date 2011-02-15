@@ -34,12 +34,13 @@ end
 class ChessBoard
 	def initialize
 		@pieces = Array.new
-	end	
-	
+	end		
 	def set_piece(piece, algebraic_notation)		
 		@pieces.push({:piece => piece, :algebraic_notation => algebraic_notation})
+	end	
+	def pieces 
+		return @pieces
 	end
-	
 	def has_white_piece(algebraic_notation)
 		@pieces.each do |this_piece|
 			if(this_piece[:piece] =~ /white/)				
@@ -49,16 +50,14 @@ class ChessBoard
 			end
 		end
 		return false
-	end
-	
+	end	
 	def has_colored_piece(color, algebraic_notation)
 		if(color == :white)
 			return self.has_white_piece(algebraic_notation)
 		else
 			return self.has_black_piece(algebraic_notation)
 		end
-	end
-	
+	end	
 	def has_black_piece(algebraic_notation)
 		@pieces.each do |this_piece|
 			if(this_piece[:piece] =~ /black/)				
@@ -96,8 +95,7 @@ class ChessBoard
 
 		destination = "#{destination_file}#{destination_rank}"
 		destination		
-	end
-	
+	end	
 	def move_diagonally_left(algebraic_notation, direction, amount) 
 		file = algebraic_notation[0,1]
 		rank = algebraic_notation[1,1]
@@ -112,7 +110,16 @@ class ChessBoard
 		destination = "#{destination_file}#{destination_rank}"
 		destination		
 	end
-	
+	def move_within_rank(algebraic_notation, amount)
+		file = algebraic_notation[0,1]
+		rank = algebraic_notation[1,1]
+		
+		destination_file = (file[0] + amount).chr
+		destination_rank = rank
+
+		destination = "#{destination_file}#{destination_rank}"
+		destination	
+	end
 	def get_available_moves(piece, algebraic_notation)
 		available_moves = Array.new
 		
@@ -133,6 +140,23 @@ class ChessBoard
 			opposing_color = :white
 			direction = :down
 		end
+		if(piece =~ /queen/)
+			keep_moving_forward = true
+			current_position = algebraic_notation
+			while(keep_moving_forward)
+				move_up_one_notation = self.move_within_file(current_position, direction, 1)
+				unless(self.has_colored_piece(color, move_up_one_notation))
+					available_moves.push(move_up_one_notation);
+				end
+				
+				current_position = move_up_one_notation
+				if(self.has_colored_piece(color, move_up_one_notation))
+					keep_moving_forward = false
+				elsif(self.has_colored_piece(opposing_color, move_up_one_notation))
+					keep_moving_forward = false
+				end
+			end
+		end
 		if(piece =~ /knight/)
 			move_up_one_notation = self.move_within_file(algebraic_notation, direction, 1)
 			
@@ -145,6 +169,38 @@ class ChessBoard
 			unless(self.has_colored_piece(color, move_up_two_and_left_one))
 				available_moves.push(move_up_two_and_left_one);
 			end	
+			
+			move_down_one_notation = self.move_within_file(algebraic_notation, direction, -1)
+			move_down_two_and_right_one = self.move_diagonally_right(move_down_one_notation, direction, -1)
+			unless(self.has_colored_piece(color, move_down_two_and_right_one))
+				available_moves.push(move_down_two_and_right_one);
+			end	
+			
+			move_down_one_notation = self.move_within_file(algebraic_notation, direction, -1)
+			move_down_two_and_left_one = self.move_diagonally_left(move_down_one_notation, direction, -1)
+			unless(self.has_colored_piece(color, move_down_two_and_left_one))
+				available_moves.push(move_down_two_and_left_one);
+			end
+			
+			move_up_one_and_right_two_notation = self.move_within_rank(move_up_one_notation, 2)
+			unless(self.has_colored_piece(color, move_up_one_and_right_two_notation))
+				available_moves.push(move_up_one_and_right_two_notation);
+			end
+			
+			move_up_one_and_left_two_notation = self.move_within_rank(move_up_one_notation, -2)
+			unless(self.has_colored_piece(color, move_up_one_and_left_two_notation))
+				available_moves.push(move_up_one_and_left_two_notation);
+			end
+			
+			move_down_one_and_right_two_notation = self.move_within_rank(move_down_one_notation, 2)
+			unless(self.has_colored_piece(color, move_down_one_and_right_two_notation))
+				available_moves.push(move_down_one_and_right_two_notation);
+			end
+			
+			move_down_one_and_left_two_notation = self.move_within_rank(move_down_one_notation, -2)
+			unless(self.has_colored_piece(color, move_down_one_and_left_two_notation))
+				available_moves.push(move_down_one_and_left_two_notation);
+			end
 		end		
 		if(piece =~ /pawn/)		
 			
