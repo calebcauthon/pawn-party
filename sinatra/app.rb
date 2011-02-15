@@ -141,6 +141,43 @@ class ChessBoard
 			direction = :down
 		end
 		if(piece =~ /queen/)
+			
+			keep_moving_left = true
+			current_position = algebraic_notation
+			while(keep_moving_left)
+				move_left_one_notation = self.move_within_rank(current_position, -1)
+				unless(self.has_colored_piece(color, move_left_one_notation))
+					available_moves.push(move_left_one_notation);
+				end
+				
+				current_position = move_left_one_notation
+				if(self.has_colored_piece(color, move_left_one_notation))
+					keep_moving_left = false
+				elsif(self.has_colored_piece(opposing_color, move_left_one_notation))
+					keep_moving_left = false
+				elsif(move_left_one_notation[0,1].to_s == 'a')
+					keep_moving_left = false
+				end
+			end
+			
+			keep_moving_right = true
+			current_position = algebraic_notation
+			while(keep_moving_right)
+				move_right_one_notation = self.move_within_rank(current_position, 1)
+				unless(self.has_colored_piece(color, move_right_one_notation))
+					available_moves.push(move_right_one_notation);
+				end
+				
+				current_position = move_right_one_notation
+				if(self.has_colored_piece(color, move_right_one_notation))
+					keep_moving_right = false
+				elsif(self.has_colored_piece(opposing_color, move_right_one_notation))
+					keep_moving_right = false
+				elsif(move_right_one_notation[0,1].to_s == 'h')
+					keep_moving_right = false
+				end
+			end
+			
 			keep_moving_forward = true
 			current_position = algebraic_notation
 			while(keep_moving_forward)
@@ -154,12 +191,14 @@ class ChessBoard
 					keep_moving_forward = false
 				elsif(self.has_colored_piece(opposing_color, move_up_one_notation))
 					keep_moving_forward = false
+				elsif(self.move_within_file(current_position, direction, 1)[1,1].to_i == 0)
+					keep_moving_forward = false
 				end
 			end
 			
-			keep_moving_diagonally = true
+			keep_moving_diagonally_right = true
 			current_position = algebraic_notation
-			while(keep_moving_diagonally)
+			while(keep_moving_diagonally_right)
 				move_up_diagonally_right_notation = self.move_diagonally_right(current_position, direction, 1)
 				unless(self.has_colored_piece(color, move_up_diagonally_right_notation))
 					available_moves.push(move_up_diagonally_right_notation);
@@ -167,11 +206,29 @@ class ChessBoard
 				
 				current_position = move_up_diagonally_right_notation
 				if(self.has_colored_piece(color, move_up_diagonally_right_notation))
-					keep_moving_diagonally = false
+					keep_moving_diagonally_right = false
 				elsif(self.has_colored_piece(opposing_color, move_up_diagonally_right_notation))
-					keep_moving_diagonally = false
+					keep_moving_diagonally_right = false
 				elsif(move_up_diagonally_right_notation[0,1].to_s == 'h')
-					keep_moving_diagonally = false
+					keep_moving_diagonally_right = false
+				end	
+			end
+			
+			keep_moving_diagonally_left = true
+			current_position = algebraic_notation
+			while(keep_moving_diagonally_left)
+				move_up_diagonally_left_notation = self.move_diagonally_left(current_position, direction, 1)
+				unless(self.has_colored_piece(color, move_up_diagonally_left_notation))
+					available_moves.push(move_up_diagonally_left_notation);
+				end
+				
+				current_position = move_up_diagonally_left_notation
+				if(self.has_colored_piece(color, move_up_diagonally_left_notation))
+					keep_moving_diagonally_left = false
+				elsif(self.has_colored_piece(opposing_color, move_up_diagonally_left_notation))
+					keep_moving_diagonally_left = false
+				elsif(move_up_diagonally_left_notation[0,1].to_s == 'a')
+					keep_moving_diagonally_left = false
 				end	
 			end
 		end

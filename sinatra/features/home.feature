@@ -322,5 +322,80 @@ Feature: chess board
 		When available moves are calculated for the black queen at d8
 		Then the squares marked with a 1 should be the available moves		
 		And the number of available moves should be 4
+	
+	Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		| br| bk| bb| bq| bK| bb| bk| br| 8  |
+		| bp| bp| 1 | bp| bp| bp| bp| bp| 7  |
+		|   | 1 |   |   |   |   |   |   | 6  |
+		| 1 |   |   |   |   |   |   |   | 5  |
+		|   |   |   |   |   |   |   |   | 4  |
+		|   |   |   |   |   |   |   |   | 3  |
+		| wp| wp| wp| wp| wp| wp| wp| wp| 2  |
+		| wr| wk| wb| wK| wq| wb| wk| wr| 1  |
+		
+		When available moves are calculated for the black queen at d8
+		Then the squares marked with a 1 should be the available moves		
+		And the number of available moves should be 3
+	
+	Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		| br| bk| bb| bq| bK| bb| bk| br| 8  |
+		| bp| bp| bp| 1 | bp| bp| bp| bp| 7  |
+		|   |   |   | 1 |   |   |   |   | 6  |
+		|   |   |   | 1 |   |   |   |   | 5  |
+		|   |   |   | 1 |   |   |   |   | 4  |
+		|   |   |   | 1 |   |   |   |   | 3  |
+		| wp| wp| wp| 1 | wp| wp| wp| wp| 2  |
+		| wr| wk| wb| 1 | wq| wb| wk| wr| 1  |
+		
+		When available moves are calculated for the black queen at d8
+		Then the squares marked with a 1 should be the available moves		
+		And the number of available moves should be 7
+		
+	Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		| br| bk| bb| bq| bK| bb| bk| br| 8  |
+		| bp| bp| bp| bp| bp| bp| bp| bp| 7  |
+		|   |   |   |   | 1 |   |   |   | 6  |
+		| 1 |   |   |   | 1 |   |   |   | 5  |
+		|   | 1 |   |   | 1 |   |   | 1 | 4  |
+		|   |   | 1 |   | 1 |   | 1 |   | 3  |
+		| wp| wp| wp| 1 | 1 | 1 | wp| wp| 2  |
+		| 1 | 1 | 1 | 1 | wq| 1 | 1 | 1 | 1  |
+		
+		When available moves are calculated for the white queen at e1
+		Then the squares marked with a 1 should be the available moves		
+		And the number of available moves should be 20
+		
+	Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		| br| bk| bb| bq| bK| bb| bk| br| 8  |
+		| bp| bp| bp| bp| bp| bp| bp| bp| 7  |
+		|   |   |   |   |   |   |   |   | 6  |
+		| 1 |   |   |   |   |   |   |   | 5  |
+		|   | 1 |   |   | wp|   |   | 1 | 4  |
+		|   |   | 1 |   | 1 |   | 1 |   | 3  |
+		| wp| wp| wp| 1 | 1 | 1 | wp| wp| 2  |
+		| 1 | 1 | 1 | 1 | wq| 1 | 1 | 1 | 1  |
+		
+		When available moves are calculated for the white queen at e1
+		Then the squares marked with a 1 should be the available moves		
+		And the number of available moves should be 16
+
+	Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		| 1 | 1 | 1 | bq| 1 | 1 | 1 | 1 | 8  |
+		| bp| bp| 1 | 1 | 1 | bp| bp| bp| 7  |
+		|   | 1 |   | 1 |   | 1 |   |   | 6  |
+		| 1 |   |   | 1 |   |   | 1 |   | 5  |
+		|   |   |   | 1 |   |   |   | 1 | 4  |
+		|   |   |   | 1 |   |   |   |   | 3  |
+		| wp| wp| wp| 1 | wp| wp| wp| wp| 2  |
+		| wr| wk| wb| 1 | wq| wb| wk| wr| 1  |
+		
+		When available moves are calculated for the black queen at d8
+		Then the squares marked with a 1 should be the available moves		
+		And the number of available moves should be 21		
 		
 		
