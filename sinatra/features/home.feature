@@ -307,5 +307,20 @@ Feature: chess board
 		Then the squares marked with a 1 should be the available moves
 		And one of the available moves should be d2
 		And the number of available moves should be 6
+	
+	Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		| br| bk| bb| bq| bK| bb| bk| br| 8  |
+		| bp| bp| bp| bp| 1 | bp| bp| bp| 7  |
+		|   |   |   |   |   | 1 |   |   | 6  |
+		|   |   |   |   |   |   | 1 |   | 5  |
+		|   |   |   |   |   |   |   | 1 | 4  |
+		|   |   |   |   |   |   |   |   | 3  |
+		| wp| wp| wp| wp| wp| wp| wp| wp| 2  |
+		| wr| wk| wb| wK| wq| wb| wk| wr| 1  |
+		
+		When available moves are calculated for the black queen at d8
+		Then the squares marked with a 1 should be the available moves		
+		And the number of available moves should be 4
 		
 		

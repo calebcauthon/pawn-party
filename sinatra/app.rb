@@ -156,6 +156,24 @@ class ChessBoard
 					keep_moving_forward = false
 				end
 			end
+			
+			keep_moving_diagonally = true
+			current_position = algebraic_notation
+			while(keep_moving_diagonally)
+				move_up_diagonally_right_notation = self.move_diagonally_right(current_position, direction, 1)
+				unless(self.has_colored_piece(color, move_up_diagonally_right_notation))
+					available_moves.push(move_up_diagonally_right_notation);
+				end
+				
+				current_position = move_up_diagonally_right_notation
+				if(self.has_colored_piece(color, move_up_diagonally_right_notation))
+					keep_moving_diagonally = false
+				elsif(self.has_colored_piece(opposing_color, move_up_diagonally_right_notation))
+					keep_moving_diagonally = false
+				elsif(move_up_diagonally_right_notation[0,1].to_s == 'h')
+					keep_moving_diagonally = false
+				end	
+			end
 		end
 		if(piece =~ /knight/)
 			move_up_one_notation = self.move_within_file(algebraic_notation, direction, 1)
