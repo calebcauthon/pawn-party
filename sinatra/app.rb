@@ -490,6 +490,23 @@ class ChessBoard
 		end
 		available_moves
 	end
+	def get_available_moves_from_right_movement_with_limit(piece, algebraic_notation, limit)
+		moves = self.get_available_moves_from_right_movement(piece, algebraic_notation)
+		moves.slice(0, limit)				
+	end
+	def get_available_moves_from_left_movement_with_limit(piece, algebraic_notation, limit)
+		moves = self.get_available_moves_from_left_movement(piece, algebraic_notation)
+		moves.slice(0, limit)				
+	end
+	def get_available_moves_from_forward_movement_with_limit(piece, algebraic_notation, limit)
+		moves = self.get_available_moves_from_forward_movement(piece, algebraic_notation)
+		moves.slice(0, limit)		
+	end	
+	def get_available_moves_from_backward_movement_with_limit(piece, algebraic_notation, limit)
+		moves = self.get_available_moves_from_backward_movement(piece, algebraic_notation)
+		moves.slice(0, limit)		
+	end
+
 	def get_available_moves_from_right_movement(piece, algebraic_notation)
 		rank = algebraic_notation[1,1]
 		
@@ -534,6 +551,14 @@ class ChessBoard
 			end
 		end
 		available_moves
+	end
+	def get_all_diagonal_moves_with_limit(piece, algebraic_notation, limit) 
+		moves = Array.new
+		moves = moves + self.get_available_moves_from_diagonal_right_forward_movement(piece, algebraic_notation).slice(0,limit)
+		moves = moves + self.get_available_moves_from_diagonal_left_forward_movement(piece, algebraic_notation).slice(0,limit)
+		moves = moves + self.get_available_moves_from_diagonal_right_backward_movement(piece, algebraic_notation).slice(0,limit)
+		moves = moves + self.get_available_moves_from_diagonal_left_backward_movement(piece, algebraic_notation).slice(0,limit)
+		moves
 	end
 	def get_all_diagonal_moves(piece, algebraic_notation) 
 		available_moves = Array.new
@@ -586,8 +611,7 @@ class ChessBoard
 		available_moves
 	end
 	def get_available_moves(piece, algebraic_notation)
-		available_moves = Array.new
-		
+		available_moves = Array.new		
 		rank = algebraic_notation[1,1]
 			
 		if(piece =~ /white/)
@@ -692,7 +716,13 @@ class ChessBoard
 				end
 			end
 		end
-		
+		if(piece =~ /king/)			
+			available_moves = available_moves + self.get_available_moves_from_right_movement_with_limit(piece, algebraic_notation, 1)			
+			available_moves = available_moves + self.get_available_moves_from_left_movement_with_limit(piece, algebraic_notation, 1)
+			available_moves = available_moves + self.get_available_moves_from_forward_movement_with_limit(piece, algebraic_notation, 1)
+			available_moves = available_moves + self.get_available_moves_from_backward_movement_with_limit(piece, algebraic_notation, 1)		
+			available_moves = available_moves + self.get_all_diagonal_moves_with_limit(piece, algebraic_notation, 1)		
+		end
 		available_moves
 	end
 	def get_starting_board
