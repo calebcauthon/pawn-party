@@ -292,7 +292,7 @@ Feature: chess board
 		Then the squares marked with a 1 should be the available moves
 		And none of the available moves should be d4
 		
-	Given the following chessboard setup:
+		Given the following chessboard setup:
 		| a | b | c | d | e | f | g | h |rank|
 		| br| bk| bb| bq| bK| bb| bk| br| 8  |
 		| bp| bp| bp| 1 | bp| bp| bp| bp| 7  |
@@ -308,7 +308,7 @@ Feature: chess board
 		And one of the available moves should be d2
 		And the number of available moves should be 6
 	
-	Given the following chessboard setup:
+		Given the following chessboard setup:
 		| a | b | c | d | e | f | g | h |rank|
 		| br| bk| bb| bq| bK| bb| bk| br| 8  |
 		| bp| bp| bp| bp| 1 | bp| bp| bp| 7  |
@@ -323,7 +323,7 @@ Feature: chess board
 		Then the squares marked with a 1 should be the available moves		
 		And the number of available moves should be 4
 	
-	Given the following chessboard setup:
+		Given the following chessboard setup:
 		| a | b | c | d | e | f | g | h |rank|
 		| br| bk| bb| bq| bK| bb| bk| br| 8  |
 		| bp| bp| 1 | bp| bp| bp| bp| bp| 7  |
@@ -338,7 +338,7 @@ Feature: chess board
 		Then the squares marked with a 1 should be the available moves		
 		And the number of available moves should be 3
 	
-	Given the following chessboard setup:
+		Given the following chessboard setup:
 		| a | b | c | d | e | f | g | h |rank|
 		| br| bk| bb| bq| bK| bb| bk| br| 8  |
 		| bp| bp| bp| 1 | bp| bp| bp| bp| 7  |
@@ -353,7 +353,7 @@ Feature: chess board
 		Then the squares marked with a 1 should be the available moves		
 		And the number of available moves should be 7
 		
-	Given the following chessboard setup:
+		Given the following chessboard setup:
 		| a | b | c | d | e | f | g | h |rank|
 		| br| bk| bb| bq| bK| bb| bk| br| 8  |
 		| bp| bp| bp| bp| bp| bp| bp| bp| 7  |
@@ -368,7 +368,7 @@ Feature: chess board
 		Then the squares marked with a 1 should be the available moves		
 		And the number of available moves should be 20
 		
-	Given the following chessboard setup:
+		Given the following chessboard setup:
 		| a | b | c | d | e | f | g | h |rank|
 		| br| bk| bb| bq| bK| bb| bk| br| 8  |
 		| bp| bp| bp| bp| bp| bp| bp| bp| 7  |
@@ -383,7 +383,7 @@ Feature: chess board
 		Then the squares marked with a 1 should be the available moves		
 		And the number of available moves should be 16
 
-	Given the following chessboard setup:
+		Given the following chessboard setup:
 		| a | b | c | d | e | f | g | h |rank|
 		| 1 | 1 | 1 | bq| 1 | 1 | 1 | 1 | 8  |
 		| bp| bp| 1 | 1 | 1 | bp| bp| bp| 7  |
@@ -398,7 +398,7 @@ Feature: chess board
 		Then the squares marked with a 1 should be the available moves		
 		And the number of available moves should be 21		
 	
-	Given the following chessboard setup:
+		Given the following chessboard setup:
 		| a | b | c | d | e | f | g | h |rank|
 		| 1 |   |   | 1 |   |   | 1 |   | 8  |
 		|   | 1 |   | 1 |   | 1 |   |   | 7  |
@@ -412,4 +412,122 @@ Feature: chess board
 		When available moves are calculated for the black queen at d5
 		Then the squares marked with a 1 should be the available moves		
 		And the number of available moves should be 27		
+
+		Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		| 1 |   |   | 1 |   |   | 1 |   | 8  |
+		|   | 1 |   | 1 |   | 1 |   |   | 7  |
+		|   |   | 1 | 1 | 1 |   |   |   | 6  |
+		| 1 | 1 | 1 | wq| 1 | 1 | 1 | 1 | 5  |
+		|   |   | 1 | 1 | 1 |   |   |   | 4  |
+		|   | 1 |   | 1 |   | 1 |   |   | 3  |
+		| 1 |   |   | 1 |   |   | 1 |   | 2  |
+		|   |   |   | 1 |   |   |   | 1 | 1  |
 		
+		When available moves are calculated for the white queen at d5
+		Then the squares marked with a 1 should be the available moves		
+		And the number of available moves should be 27	
+
+		Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		| wp|   |   | wp|   |   | wp|   | 8  |
+		|   | 1 |   | 1 |   | 1 |   |   | 7  |
+		|   |   | 1 | 1 | 1 |   |   |   | 6  |
+		| wp| 1 | 1 | wq| 1 | 1 | 1 | wp| 5  |
+		|   |   | 1 | 1 | 1 |   |   |   | 4  |
+		|   | 1 |   | 1 |   | 1 |   |   | 3  |
+		| wp|   |   | 1 |   |   | 1 |   | 2  |
+		|   |   |   | wp|   |   |   | wp| 1  |
+		
+		When available moves are calculated for the white queen at d5
+		Then the squares marked with a 1 should be the available moves		
+		And the number of available moves should be 19	
+		
+		Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		| bp|   |   | bp|   |   | bp|   | 8  |
+		|   | 1 |   | 1 |   | 1 |   |   | 7  |
+		|   |   | 1 | 1 | 1 |   |   |   | 6  |
+		| bp| 1 | 1 | bq| 1 | 1 | 1 | bp| 5  |
+		|   |   | 1 | 1 | 1 |   |   |   | 4  |
+		|   | 1 |   | 1 |   | 1 |   |   | 3  |
+		| bp|   |   | 1 |   |   | 1 |   | 2  |
+		|   |   |   | bp|   |   |   | bp| 1  |
+		
+		When available moves are calculated for the black queen at d5
+		Then the squares marked with a 1 should be the available moves		
+		And the number of available moves should be 19		
+
+		Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		| 1 | 1 | 1 |   |   | 2 | 2 | 2 | 8  |
+		| 1 | bq| 1 | bp| bp| 2 | bq| 2 | 7  |
+		| 1 | 1 | 1 |   |   | 2 | 2 | 2 | 6  |
+		|   | bp|   | bp| bp|   | bp|   | 5  |
+		|   | bp|   | bp| bp|   | bp|   | 4  |
+		| 4 | 4 | 4 |   |   | 3 | 3 | 3 | 3  |
+		| 4 | bq| 4 | bp| bp| 3 | bq| 3 | 2  |
+		| 4 | 4 | 4 |   |   | 3 | 3 | 3 | 1  |
+		
+		When available moves are calculated for the black queen at b7
+		Then the squares marked with a 1 should be the available moves		
+		And the number of available moves should be 8	
+
+		When available moves are calculated for the black queen at g7
+		Then the squares marked with a 2 should be the available moves		
+		And the number of available moves should be 8		
+		
+		
+		
+		Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		| 1 | 1 | 1 |   |   | 2 | 2 | 2 | 8  |
+		| 1 | bq| 1 | bp| bp| 2 | bq| 2 | 7  |
+		| 1 | 1 | 1 |   |   | 2 | 2 | 2 | 6  |
+		|   | bp|   | bp| bp|   | bp|   | 5  |
+		|   | bp|   | bp| bp|   | bp|   | 4  |
+		| 4 | 4 | 4 |   |   | 3 | 3 | 3 | 3  |
+		| 4 | bq| 4 | bp| bp| 3 | bq| 3 | 2  |
+		| 4 | 4 | 4 |   |   | 3 | 3 | 3 | 1  |
+		
+		When available moves are calculated for the black queen at b2
+		Then the squares marked with a 4 should be the available moves		
+		And the number of available moves should be 8
+		
+		Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		| 1 | 1 | 1 |   |   | 2 | 2 | 2 | 8  |
+		| 1 | bq| 1 | bp| bp| 2 | bq| 2 | 7  |
+		| 1 | 1 | 1 |   |   | 2 | 2 | 2 | 6  |
+		|   | bp|   | bp| bp|   | bp|   | 5  |
+		|   | bp|   | bp| bp|   | bp|   | 4  |
+		| 4 | 4 | 4 |   |   | 3 | 3 | 3 | 3  |
+		| 4 | bq| 4 | bp| bp| 3 | bq| 3 | 2  |
+		| 4 | 4 | 4 |   |   | 3 | 3 | 3 | 1  |
+		
+		When available moves are calculated for the black queen at g2
+		Then the squares marked with a 3 should be the available moves		
+		And the number of available moves should be 8
+		
+		Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		| bq| bp|   |   |   |   | bp| bq| 8  |
+		| bp| bp|   |   |   |   | bp| bp| 7  |
+		|   |   |   |   |   |   |   |   | 6  |
+		|   |   |   |   |   |   |   |   | 5  |
+		|   |   |   |   |   |   |   |   | 4  |
+		|   |   |   |   |   |   |   |   | 3  |
+		| bp| bp|   |   |   |   | bp| bp| 2  |
+		| bq| bp|   |   |   |   | bp| bq| 1  |
+		
+		When available moves are calculated for the black queen at a8
+		Then the number of available moves should be 0
+		
+		When available moves are calculated for the black queen at h8
+		Then the number of available moves should be 0
+		
+		When available moves are calculated for the black queen at h1
+		Then the number of available moves should be 0
+		
+		When available moves are calculated for the black queen at a1
+		Then the number of available moves should be 0

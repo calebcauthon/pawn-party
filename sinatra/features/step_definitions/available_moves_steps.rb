@@ -34,7 +34,7 @@ Then /^chessboard should detect a black piece at ([a-h]{1})(\d+)$/ do |file, ran
 end
 
 Then /^the number of available moves should be (\d+)$/ do |number_of_available_moves|
-	@available_moves.length.should == number_of_available_moves.to_i
+	@available_moves.length.should == number_of_available_moves.to_i	
 end
 
 Then /^one of the available moves should be ([a-h]{1})(\d+)$/ do |file, rank|
@@ -70,8 +70,8 @@ Then /^the squares marked with a (\d+) should be the available moves$/ do |marke
 				if(this_algebraic_notation == expected_algebraic_notation)
 					found += 1
 				end
-			end
-			
+			end					
+
 			found.should == 1
 		end
 	end
