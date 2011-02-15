@@ -84,10 +84,12 @@ class ChessBoard
 		destination		
 	end
 	
-	def get_available_moves(piece, algebraic_notation, direction)
+	def get_available_moves(piece, algebraic_notation)
 		available_moves = Array.new
 		
 		if(piece == 'white pawn')			
+			direction = :up
+			
 			move_up_one_notation = self.move_within_file(algebraic_notation, direction, 1)
 			
 			unless(self.has_white_piece(move_up_one_notation))
@@ -95,7 +97,7 @@ class ChessBoard
 			end
 		
 			capture_right_notation = self.move_diagonally_right(algebraic_notation, direction, 1)
-			if(self.has_black_piece(capture_right_notation))
+			if(self.has_black_piece(capture_right_notation))			
 				available_moves.push(capture_right_notation)
 			end
 		

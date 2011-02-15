@@ -13,7 +13,6 @@ Feature: chess board
 	Scenario: Getting available moves for a home row pawn without anything in front of it
 		Given the chess board is empty
 		And the white pawn is placed on a2
-		And the direction is up
 		When available moves are calculated
 		Then the number of available moves should be 2
 		And one of the available moves should be a3
@@ -22,18 +21,9 @@ Feature: chess board
 	Scenario: Getting available moves for a non home row pawn without anything in front of it
 		Given the chess board is empty
 		And the white pawn is placed on a3
-		And the direction is up
 		When available moves are calculated
 		Then the number of available moves should be 1
 		And one of the available moves should be a4
-		
-	Scenario: Getting available moves for a pawn with something in front of it
-		Given the chess board is empty
-		And there is a white pawn on a3
-		And the white pawn is placed on a2
-		And the direction is up
-		When available moves are calculated
-		Then the number of available moves should be 0
 		
 	Scenario: Getting an empty chess board
 		Given I have created a starting chess board
@@ -90,11 +80,61 @@ Feature: chess board
 		And I should see a white rook at h8
 		
 	Scenario: Getting available moves for a pawn with a piece to capture
-		Given the chess board is empty
-		And there is a black pawn on b4
-		And the white pawn is placed on a3
-		When available moves are calculated
+		Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		|   |   |   |   |   |   |   |   | 8  |
+		|   |   |   |   |   |   |   |   | 7  |
+		|   |   |   |   |   |   |   |   | 6  |
+		|   |   |   |   |   |   |   |   | 5  |
+		|   | bp|   |   |   |   |   |   | 4  |
+		| wp|   |   |   |   |   |   |   | 3  |
+		|   |   |   |   |   |   |   |   | 2  |
+		|   |   |   |   |   |   |   |   | 1  |
+		Then chessboard should detect a black piece at b4
+		And chessboard should detect a white piece at a3
+	
+	Scenario: Getting available moves for a pawn with a piece to capture
+		Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		|   |   |   |   |   |   |   |   | 8  |
+		|   |   |   |   |   |   |   |   | 7  |
+		|   |   |   |   |   |   |   |   | 6  |
+		|   |   |   |   |   |   |   |   | 5  |
+		|   | bp|   |   |   |   |   |   | 4  |
+		| wp|   |   |   |   |   |   |   | 3  |
+		|   |   |   |   |   |   |   |   | 2  |
+		|   |   |   |   |   |   |   |   | 1  |
+		When available moves are calculated for the white pawn at a3
 		Then the number of available moves should be 2
 		And one of the available moves should be a4
 		And one of the available moves should be b4
-	
+		
+	Scenario: Getting available moves for a pawn with a piece to capture
+		Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		|   |   |   |   |   |   |   |   | 8  |
+		|   |   |   |   |   |   |   |   | 7  |
+		|   |   |   |   |   |   |   |   | 6  |
+		|   |   |   |   |   |   |   |   | 5  |
+		|   | bp|   |   |   |   |   |   | 4  |
+		| wp|   |   |   |   |   |   |   | 3  |
+		|   |   |   |   |   |   |   |   | 2  |
+		|   |   |   |   |   |   |   |   | 1  |
+		When available moves are calculated for the white pawn at a3
+		Then the number of available moves should be 2
+		And one of the available moves should be a4
+		And one of the available moves should be b4
+		
+	Scenario: Getting available moves for a pawn with something in front of it
+		Given the following chessboard setup:
+		| a | b | c | d | e | f | g | h |rank|
+		|   |   |   |   |   |   |   |   | 8  |
+		|   |   |   |   |   |   |   |   | 7  |
+		|   |   |   |   |   |   |   |   | 6  |
+		|   |   |   |   |   |   |   |   | 5  |
+		|   |   |   |   |   |   |   |   | 4  |
+		| wp|   |   |   |   |   |   |   | 3  |
+		| wp|   |   |   |   |   |   |   | 2  |
+		|   |   |   |   |   |   |   |   | 1  |
+		When available moves are calculated for the white pawn at a2
+		Then the number of available moves should be 0

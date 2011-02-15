@@ -12,12 +12,15 @@ Given /^the white pawn is placed on ([a-h]{1})(\d+)$/ do |file, rank|
 	@piece = 'white pawn'
 end
 
-Given /^the direction is up$/ do
-	@direction = :up
+When /^available moves are calculated for the (\S+ \S+) at ([a-h]{1})(\d+)$/ do |piece, file, rank|
+	algebraic_notation = "#{file}#{rank}"
+	
+	@chessboard.set_piece(piece, algebraic_notation)
+	@available_moves = @chessboard.get_available_moves(piece, algebraic_notation)	
 end
 
 When /^available moves are calculated$/ do
-	@available_moves = @chessboard.get_available_moves(@piece, @algebraic_notation, @direction)
+	@available_moves = @chessboard.get_available_moves(@piece, @algebraic_notation)
 end
 
 Then /^chessboard should detect a white piece at ([a-h]{1})(\d+)$/ do |file, rank|
@@ -46,3 +49,56 @@ Then /^one of the available moves should be ([a-h]{1})(\d+)$/ do |file, rank|
 	found.should == 1
 end
 
+Given /^the following chessboard setup:$/ do |table|
+	@chessboard = ChessBoard.new
+	
+	all_pieces = Array.new
+	pieces_in_this_row = Array.new
+	
+	#algebraic_notation = "#{file}#{rank}"
+	#@chessboard.set_piece(piece, algebraic_notation)
+	
+	table.hashes.each do |hash|
+		hash.each do |file_or_attribute_name, piece_or_rank|	
+			if(file_or_attribute_name == "rank")
+				rank = piece_or_rank
+				
+				pieces_in_this_row.each do |this_row_piece|
+					this_row_piece[:rank] = rank
+					all_pieces.push(this_row_piece)
+				end
+				
+				pieces_in_this_row = Array.new
+			else			
+				file = file_or_attribute_name
+				piece = piece_or_rank
+				
+				this_piece = Hash.new
+				this_piece[:file] = file
+				this_piece[:piece] = piece
+				
+				if(piece != "")
+					pieces_in_this_row.push(this_piece)
+				end
+			end			
+		end
+	end
+	
+	@algebraic_notation = "a1"
+	@piece = 'white pawn'
+	
+	all_pieces.each do |this_piece|
+		file = this_piece[:file]
+		rank = this_piece[:rank]			
+		piece_abbreviation = this_piece[:piece]
+		if(piece_abbreviation == 'wp')
+			piece = "white pawn"
+		elsif(piece_abbreviation == 'bp')
+			piece = "black pawn"
+		end		
+		
+		algebraic_notation = "#{file}#{rank}"
+		@chessboard.set_piece(piece, algebraic_notation)
+		#print "theres a piece in this row, piece=#{this_piece[:piece]}, rank=#{this_piece[:rank]}, file=#{this_piece[:file]}\n"
+	end
+end
