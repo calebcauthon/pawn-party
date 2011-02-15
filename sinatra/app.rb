@@ -87,7 +87,26 @@ class ChessBoard
 		file = algebraic_notation[0,1]
 		rank = algebraic_notation[1,1]
 		
+		if(direction == :down)
+			amount = amount * -1
+		end
+		
 		destination_file = (file[0] + 1).chr
+		destination_rank = rank.to_i + amount
+
+		destination = "#{destination_file}#{destination_rank}"
+		destination		
+	end
+	
+	def move_diagonally_left(algebraic_notation, direction, amount) 
+		file = algebraic_notation[0,1]
+		rank = algebraic_notation[1,1]
+		
+		if(direction == :down)
+			amount = amount * -1
+		end
+		
+		destination_file = (file[0] - 1).chr
 		destination_rank = rank.to_i + amount
 
 		destination = "#{destination_file}#{destination_rank}"
@@ -97,24 +116,37 @@ class ChessBoard
 	def get_available_moves(piece, algebraic_notation)
 		available_moves = Array.new
 		
-		if(piece =~ /pawn/)		
-			rank = algebraic_notation[1,1]
+		rank = algebraic_notation[1,1]
 			
-			if(piece =~ /white/)
-				if(rank.to_i == 2)
-					pawn_is_on_home_row = true
-				end
-				color = :white
-				opposing_color = :black
-				direction = :up
-			else
-				if(rank.to_i == 7)
-					pawn_is_on_home_row = true
-				end
-				color = :black
-				opposing_color = :white
-				direction = :down
+		if(piece =~ /white/)
+			if(rank.to_i == 2)
+				pawn_is_on_home_row = true
 			end
+			color = :white
+			opposing_color = :black
+			direction = :up
+		else
+			if(rank.to_i == 7)
+				pawn_is_on_home_row = true
+			end
+			color = :black
+			opposing_color = :white
+			direction = :down
+		end
+		if(piece =~ /knight/)
+			move_up_one_notation = self.move_within_file(algebraic_notation, direction, 1)
+			
+			move_up_two_and_right_one = self.move_diagonally_right(move_up_one_notation, direction, 1)
+			unless(self.has_colored_piece(color, move_up_two_and_right_one))
+				available_moves.push(move_up_two_and_right_one);
+			end			
+			
+			move_up_two_and_left_one = self.move_diagonally_left(move_up_one_notation, direction, 1)
+			unless(self.has_colored_piece(color, move_up_two_and_left_one))
+				available_moves.push(move_up_two_and_left_one);
+			end	
+		end		
+		if(piece =~ /pawn/)		
 			
 			move_up_one_notation = self.move_within_file(algebraic_notation, direction, 1)
 			unless(self.has_colored_piece(color, move_up_one_notation))

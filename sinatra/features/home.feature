@@ -212,13 +212,22 @@ Feature: chess board
 		
 		When available moves are calculated for the white pawn at a2
 		Then one of the available moves should be a3
-		Then one of the available moves should be a4
+		And one of the available moves should be a4
 		
 		When available moves are calculated for the white pawn at f2
 		Then one of the available moves should be f3
-		Then one of the available moves should be f4
+		And one of the available moves should be f4
 		
 		When available moves are calculated for the black pawn at a7
 		Then one of the available moves should be a6
-		Then one of the available moves should be a5
+		And one of the available moves should be a5
+		
+		When available moves are calculated for the white knight at b1
+		Then one of the available moves should be c3
+		And one of the available moves should be a3
+		
+		When available moves are calculated for the black knight at b8
+		Then one of the available moves should be c6
+		And one of the available moves should be a6
+		
 		
