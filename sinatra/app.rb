@@ -605,6 +605,12 @@ class ChessBoard
 			opposing_color = :white
 			direction = :down
 		end
+		if(piece =~ /bishop/)
+			moves_from_diagonal_movements = self.get_all_diagonal_moves(piece, algebraic_notation)
+			moves_from_diagonal_movements.each do |this_move|
+				available_moves.push(this_move)
+			end
+		end
 		if(piece =~ /queen/)
 			moves_from_straight_movements = self.get_all_straight_moves(piece, algebraic_notation)
 			moves_from_straight_movements.each do |this_move|
