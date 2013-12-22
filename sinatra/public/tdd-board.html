@@ -1,0 +1,897 @@
+<script src="lib/jquery.144.js"></script>
+<script src="lib/qunit.js"></script>
+<link rel="stylesheet" href="css/qunit.css" />
+
+<body>
+  <h1 id="qunit-header">QUnit example</h1>
+ <h2 id="qunit-banner"></h2>
+ <div id="qunit-testrunner-toolbar"></div>
+ <h2 id="qunit-userAgent"></h2>
+ <ol id="qunit-tests"></ol>
+ <div id="qunit-fixture">test markup, will be hidden</div>
+</body>
+
+<script type="text/javascript" src="lib/square.js"></script>
+<script type="text/javascript" src="lib/board.js"></script>
+<script type="text/javascript" src="lib/piece.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	var is_white = function(image_data) {
+			if(image_data.data[0] == 0 &&
+			image_data.data[1] == 0 &&
+			image_data.data[2] == 0)
+				return true;
+			else
+				return false;
+		}
+	var is_not_white = function(image_data) {
+		return is_white(image_data) ? false : true;
+	}
+
+	test('board.get_available_moves makes ajax call to /get_available_moves', function() {
+		var the_board = new board();
+		
+		var the_url;
+		$.post = function(url, data, fn) {
+			the_url = url;
+		}
+		the_board.get_available_moves();
+		
+		equals(the_url, '/get_available_moves');
+	});
+	
+	test('board.get_board_notations() works for multiple pieces', function() {
+		var the_board = new board();
+		
+		the_board.squares = the_board.create_empty_chess_board();
+		
+		the_board.set_piece({ piece : 'white king', location : 'h1' });
+		the_board.set_piece({ piece : 'black queen', location : 'g7' });
+		
+		var notations = the_board.get_board_notation();
+		equals(notations.length, 2);
+		equals(notations[0].piece == 'white king' || notations[0].piece == 'black queen', true);
+		equals(notations[0].algebraic_notation == 'h1' || notations[0].algebraic_notation == 'g7', true);
+	});
+	test('board.get_board_notation() returns an array of {piece: __, algebraic_notation___} elements', function() {
+		var the_board = new board();
+		
+		the_board.squares = the_board.create_empty_chess_board();
+		
+		var piece = 'white pawn';
+		var location = 'a4';
+		the_board.set_piece({ piece : piece, location : location });
+		
+		var notations = the_board.get_board_notation();
+		equals(notations.length, 1);
+		equals(notations[0].piece, piece);
+		equals(notations[0].algebraic_notation, location);
+	});
+	test('board.get_available_moves sends .notations = .get_board_notation()  in the ajax call', function() {
+		var the_board = new board();
+		
+		var the_data;
+		$.post = function(url, data, fn) {
+			the_data = data;
+		}
+		
+		var injected_notations = 'odjl2i221jdt';
+		the_board.get_board_notation = function() { return injected_notations; }
+		the_board.get_available_moves();
+		
+		equals(the_data.notations, injected_notations);
+	});
+	test('board.highlight_available_moves_on_click() highlights available moves on click', function() {
+		var the_board = new board();
+		the_board.squares = the_board.create_empty_chess_board();
+		
+		var a1 = the_board.get_square('a1');
+		var click_event = {
+			data: { board: the_board },
+			offsetX: a1.left + 1,
+			offsetY: a1.top + 1
+		}
+		
+		the_board.highlight_available_moves = function(location) {
+			the_board.highlighted_available_moves_for = location;
+		}
+		
+		the_board.highlight_available_moves_on_click();
+		the_board.click(click_event);
+		
+		equals(the_board.highlighted_available_moves_for, 'a1');
+	});
+	test('board.click() calls board.select(a1) if a1 is clicked', function() {
+		var the_board = new board();
+		the_board.squares = the_board.create_empty_chess_board();
+		var c5 = the_board.get_square('c5');
+		var click_event = {
+			data: { board: the_board },
+			offsetX: c5.left + 3,
+			offsetY: c5.top + 3
+		}
+		
+		the_board.select = function(algebraic_notation) {
+			this.selected = algebraic_notation;
+		}
+		the_board.click(click_event);
+		
+		equals(the_board.selected, 'c5');
+		
+		
+	});
+	test('board.highlight_available_moves(a1) calls get_available_moves(a1, fn) with a fn that calls .highlight_squares()', function() {
+		var the_board = new board();
+		
+		var the_notation;
+		var the_fn;
+		the_board.get_available_moves = function(algebraic_notation, fn) {
+			the_notation = algebraic_notation;
+			the_fn = fn;
+		}
+		the_board.highlight_squares = function() {
+			the_board.highlighted_squares = true;
+		}
+		the_board.highlight_available_moves('a1');
+		
+		equals(the_notation, 'a1');
+		the_fn();
+		
+		equals(the_board.highlighted_squares, true);
+	});
+	test('board.get_available_moves(a1, fn) makes an ajax call and calls fn response.notations', function() {
+		
+		var the_board = new board();
+		
+		var the_url;
+		var the_data;
+		var the_callback;
+		
+		$.post = function(url, data, callback) {
+				the_url = url;
+				the_data = data;
+				the_callback = callback;
+		}
+		
+		var the_results;
+		var the_fn = function(results) {
+			the_results = results;
+		}
+		the_board.get_available_moves('a1', the_fn);
+		
+		equals(the_url.length > 0, true);
+		equals(the_data.algebraic_notation, 'a1');
+		
+		the_callback('{"notations" : [1,2,3]}');
+		
+		equals(the_results.length, 3);
+	});
+	test('board.highlight_squares([]) calls .highlight_square on the entire array', function() {
+		var the_board = new board();
+		
+		the_board.test_highlighted_squares = [];
+		the_board.highlight_square = function(location) {
+			this.test_highlighted_squares.push(location);
+		}
+		the_board.highlight_squares(['a1', 'a2', 'a3']);
+		
+		equals(the_board.test_highlighted_squares[0], 'a1');
+		equals(the_board.test_highlighted_squares[1], 'a2');
+		equals(the_board.test_highlighted_squares[2], 'a3');
+		
+	});
+	test('board.detect_click_events(canvas) binds click events', function() {
+		var canvas = $('#canvas_element').get(0);
+		var the_board = new board();
+		
+		the_board.has_been_clicked = false;
+		the_board.click = function() {
+			the_board.has_been_clicked = true;
+		}
+		
+		the_board.detect_click_events(canvas);
+		
+		equals(the_board.has_been_clicked, false);
+		$(canvas).trigger({
+			type: "click",
+			offsetX: 5,
+			offsetY: 5
+		});
+		equals(the_board.has_been_clicked, true);
+	});
+	test('board.make_square_highlightable(a1) binds board.highlight_square() to square.select()', function() {
+		var the_board = new board();
+		the_board.squares = the_board.create_empty_chess_board();
+		
+		the_board.highlight_square = function(location) {
+			this.highlighted_square = location;
+		}
+		
+		the_board.make_square_highlightable('a1');
+		
+		var a1 = the_board.get_square('a1');
+		a1.select();
+		
+		equals(the_board.highlighted_square, 'a1');			
+	});
+	
+	test('board.unhighlight_square(a1) changes squares color back to normal', function() {
+		var the_board = new board();
+		var the_square = new square();
+		
+		the_board.squares = [the_square];
+		the_square.algebraic_notation = 'a1';
+		the_square.draw = function(){}
+		
+		var original_color = the_square.color;
+		
+		the_board.highlight_square('a1');
+		equals(the_square.color != original_color, true);
+		
+		the_board.unhighlight_square('a1');
+		equals(the_square.color, original_color);
+		
+		
+	});
+	test('board.highlight_square(a1) changes a squares color and redraws the square', function() {
+		var the_board = new board();
+		var the_square = new square();
+		
+		the_square.algebraic_notation = 'a1';
+		the_square.color = 'black';
+		the_square.draw = function() {
+			this.has_drawn = true;
+		}
+		the_board.squares = [the_square];
+		
+		equals(the_board.get_square('a1').algebraic_notation, 'a1');
+		equals(the_board.get_square('a1').color, 'black');
+		
+		the_board.highlight_square('a1');
+		equals(the_board.get_square('a1').color != 'black', true);
+		equals(the_square.has_drawn, true);
+		
+		
+	});
+	test('board.set_board_height() sets board and square height', function() {
+		var the_board = new board();
+		the_board.set_board_height(400);
+		
+		the_board.squares = the_board.create_empty_chess_board();
+		equals(the_board.squares[0].height, 400 / 8);
+	});
+	test('board.set_board_width() sets board and square width', function() {
+		var the_board = new board();
+		the_board.set_board_width(400);
+		
+		the_board.squares = the_board.create_empty_chess_board();
+		equals(the_board.squares[0].width, 400 / 8);
+	});
+	test('board.set_pieces([]) sets a bunch of pieces', function() {
+		var a_board = new board();
+		a_board.squares = a_board.create_empty_chess_board();
+		
+		var white_pawn = { piece: 'white pawn', location: 'a3' }
+		var white_rook = { piece: 'white rook', location: 'b7' }
+		var pieces = [white_pawn, white_rook];
+		
+		a_board.set_pieces(pieces);
+		
+		
+		equals(a_board.get_square(white_pawn.location).algebraic_notation, white_pawn.location);
+		equals(a_board.get_square(white_rook.location).algebraic_notation, white_rook.location);
+	});
+	test('board.set_piece({piece:"white pawn", location: "a1"}) draws a pawn on a1', function() {
+		var a_board = new board();
+		a_board.squares = a_board.create_empty_chess_board();
+		a_board.set_piece({piece: 'white pawn', location: 'a1'});
+		
+		var pawn_square = a_board.get_square('a1');
+		equals(pawn_square.piece.piece, 'white pawn');
+	});
+	
+	test('board.context is used as context for all squares in create_empty_chess_board()', function() {
+		var canvas = $('#placement_1').get(0);
+		var context = canvas.getContext('2d');
+		
+		var a_board = new board();
+		a_board.context = 'something';
+		
+		var squares = a_board.create_empty_chess_board();
+		
+		for(var i = 0; i < 64; i++)
+		{
+			equals(squares[i].context, a_board.context);
+		}
+	
+	});
+	test('first column is "a" file, and so on, to "h"', function() {
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+		
+		var files = ['a','b','c','d','e','f','g','h'];
+		
+		var number_of_columns = 0;
+		for(var i = 0; i < 64; i++)
+		{
+			if(squares[i].left == 0)
+			{
+				for(var m = 0; m <= 7; m++)
+				{
+					var square_in_row = squares[i+m];
+					var expected_file = files[(i+m) % 8];
+					equals(square_in_row.file, expected_file);
+				}
+			}
+		}
+		
+	});
+	test('first row is 8th rank, and so on, to first rank', function() {
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+		
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+
+		var ranks = [8,7,6,5,4,3,2,1];
+		
+		for(var m = 0; m < squares.length; m++)
+		{
+			var a_square = squares[m];
+			
+			if(a_square.left == 0);
+			{
+				for(var n = 0; n <= 7; n++)
+				{
+					var square_in_row = squares[m+n];
+					var expected_rank = ranks[Math.floor(m / 8)];
+					equals(square_in_row.rank, expected_rank);
+				}
+				m += 8;
+				m -= 1;
+			}
+		}		
+	});
+	test('board.get_square("a1") returns 1 square, for a-h, 1-8', function() {
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+		
+		a_board.squares = squares;
+		
+		var ranks = [1,2,3,4,5,6,7,8];
+		var files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+		
+		for(var i=0;i<8;i++)
+		{
+			for(var j=0;j<8;j++)
+			{
+				var algebraic_notation = "" + files[j] + ranks[i];
+				var this_square = a_board.get_square(algebraic_notation);
+				equals(this_square.algebraic_notation, algebraic_notation);
+			}
+		}
+		
+		var a1 = a_board.get_square('a1');
+		equals(a1.algebraic_notation, 'a1');
+	});
+	test('when you click a square for the first time, square.select() is called', function() {
+		var canvas = $('#click_board_1').get(0);
+		var context = canvas.getContext('2d');
+		
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+		a_board.squares = squares;
+		
+		var a1 = a_board.get_square('a1');		
+		a1.has_been_clicked = false;
+		a1.select = function() {
+			this.has_been_clicked = true;
+		}
+		
+		$(canvas).click({board: a_board}, a_board.click);
+		
+		$(canvas).trigger({
+			type: "click",
+			offsetX: a1.left + 5,
+			offsetY: a1.top + 5
+		});
+		
+		equals(a1.has_been_clicked, true);
+	});
+	
+	test('board.create_empty_chess_board() each row uses altenating colors down the row', function() {
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+
+		for(var m = 0; m < squares.length; m++)
+		{
+			var a_square = squares[m];
+			
+			if(a_square.left == 0);
+			{
+				var color_one = a_square.color;
+				var color_two = squares[m+1].color;
+				
+				equals(color_one, squares[m+2].color);
+				equals(color_one, squares[m+4].color);
+				equals(color_one, squares[m+6].color);
+				
+				equals(color_two, squares[m+3].color);
+				equals(color_two, squares[m+5].color);
+				equals(color_two, squares[m+7].color);
+				m += 8;
+				m -= 1;
+			}
+		}	
+	});
+	test('board.create_empty_chess_board() the first and second row have different colors', function() {
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+
+		var color_one = squares[0].color;
+		var color_two = squares[8].color;
+		notEqual(color_one, color_two, 'the chess board is all one color');
+		
+	});
+	test('board.create_empty_chess_board() each row starts with an alternating color', function() {
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+
+		var color_one = squares[0].color;
+		var color_two = squares[8].color;
+		
+		if(!color_one)
+			equals(true, false, 'no color specified');
+		if(!color_two)
+			equals(true, false, 'no color specified');			
+		
+		equals(squares[16].color, color_one );
+		equals(squares[24].color, color_two);
+		equals(squares[32].color, color_one );
+		equals(squares[40].color, color_two);
+		equals(squares[48].color, color_one );
+		equals(squares[56].color, color_two);
+	});
+	test('board.create_empty_chess_board() that each square in a row doesnt overlap horizontally', function() {
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+		var squares_tested = 0;
+		for(var m = 0; m < squares.length; m++)
+		{
+			var a_square = squares[m];
+			
+			if(a_square.left == 0);
+			{
+				var minimum_allowed_left = a_square.left + a_square.width;
+				for(var n = 1; n <= 7; n++)
+				{
+					squares_tested++;
+					if(squares[m+n].left < minimum_allowed_left)
+						equals(true, false, 'overlapping squares');
+					else
+						minimum_allowed_left = squares[m+n].left + squares[m+n].width;
+						
+					if(isNaN(minimum_allowed_left))
+						equals(true, false);
+				}
+				m += 8;
+				m -= 1;
+			}
+		}
+		
+		equals(squares_tested, 64 - 8);
+	});
+	test('board.create_empty_chess_board() that each square does not overlap vertically', function() {
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+		
+		var smallest_allowed_top = 0;
+		for(var u = 0; u < squares.length; u++)
+		{
+			if(squares[u].top > smallest_allowed_top)
+				equals(true, false, 'squares shouldnt overlap, in square'+u+' top('+squares[u].top+') is bigger than ('+smallest_allowed_top+')');
+				
+			if((squares[u].top + squares[u].height) > smallest_allowed_top)
+				smallest_allowed_top = squares[u].top + squares[u].height;
+		}
+	});
+	test('board.create_empty_chess_board() that there are 8 aligned squares in the first row', function() {
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+		
+		var number_of_first_row_squares = 0;
+		for(var u = 0; u < squares.length; u++)
+		{
+			if(squares[u].top == 0)
+				number_of_first_row_squares++;
+		}
+		
+		equals(number_of_first_row_squares, 8);
+	});
+	test('board.create_empty_chess_board() that rows line up with first square in the row', function() {
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+
+		for(var m = 0; m < squares.length; m++)
+		{
+			var a_square = squares[m];
+			
+			if(a_square.left == 0);
+			{
+				for(var n = 0; n <= 7; n++)
+				{
+					var square_in_row = squares[m+n];
+					equals(square_in_row.top, a_square.top)
+				}
+				m += 8;
+				m -= 1;
+			}
+		}
+	});
+	test('board.create_empty_chess_board() creates 8 columns', function() {
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+		
+		var number_of_columns = 0;
+		for(var i = 0; i < 64; i++)
+		{
+			if(squares[i].top == 0)
+				number_of_columns++;
+		}
+		
+		equals(number_of_columns, 8);
+	});
+	test('board.create_empty_chess_board() creates 8 rows', function() {
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+		
+		var number_of_rows = 0;
+		for(i = 0; i < squares.length; i++)
+		{
+			if(squares[i].left == 0)
+				number_of_rows++;
+		}
+		
+		equals(number_of_rows, 8);
+			
+	});
+	test('board.create_empty_chess_board() creates 64 squares', function() {
+		
+		var a_board = new board();
+		var squares = a_board.create_empty_chess_board();
+		equals(squares.length, 64);
+	});
+	test('board.draw() draws all the squares it has in .squares', function() {
+		
+		var canvas = $('#board_test_1').get(0);
+		var context = canvas.getContext('2d');
+		
+		var black = 'rgb(0,0,0)';
+		var white = 'rgb(255,255,255)';
+		
+		var squares = [];
+		
+		for(var i=1;i <= 8; i++)
+		{	
+			var left = i * 32 - 32;
+			var color = (i % 2) == 0 ? black : white;
+			var this_square = new square();
+			this_square.set_context(context);
+			this_square.left = left;
+			this_square.top = 0;
+			this_square.color = color;
+			this_square.width = 32;
+			this_square.height = 32;
+			this.was_drawn = false;
+			this_square.draw = function() {
+				this.was_drawn = true;
+			}
+			squares.push(this_square);
+		}
+		
+		var a_board = new board();
+		a_board.squares = squares;
+		
+		a_board.draw();
+		
+		for(var i=0;i < squares.length; i++)
+		{
+			equals(squares[i].was_drawn, true);
+		}
+	});
+	test('board class exists', function() {
+		var a_board = new board();
+	});
+	
+	test('square.get_associated_image() works for white pawn', function() {
+		var the_square = new square();
+		equals(the_square.get_associated_image('white pawn'), '/images/chesspieces/white-pawn.png');
+	});
+	test('square.set_piece(piece) sets .piece.image to .get_associated_image(piece.piece)', function() {
+		var a_square = new square();
+		a_square.get_associated_image = function(the_parameter) {
+			this.get_associated_image_parameter = the_parameter;
+			return 'abc_123';
+		}
+		
+		a_square.set_piece({piece: 'cat_dog'});
+		equals(a_square.get_associated_image_parameter, 'cat_dog');
+		equals(a_square.piece.image, 'abc_123');
+	});
+	test('square.set_piece() associates pieces with images', function() {
+		var a_square = new square();
+		var fake_context = {}
+		fake_context.fillRect = function(){}
+		
+		var black_king = {}
+		black_king.piece = 'black king';
+		black_king.location = 'e1';
+		
+		a_square.set_piece(black_king);
+		equals(a_square.piece.image.length > 0, true);
+	});
+	test('square.draw() also calls .draw_image(square.piece.image)', function() {
+		var a_square = new square();
+		var fake_context = {}
+		fake_context.fillRect = function(){}
+		
+		var fake_piece = {}
+		fake_piece.image = 'some_image';
+		
+		a_square.set_piece(fake_piece);
+		a_square.set_context(fake_context);
+		a_square.draw_image = function(image_path) {
+			this.called_draw_image = true;
+			this.called_draw_image_path = image_path;
+		}
+		a_square.draw();
+		
+		equals(a_square.called_draw_image, true);
+		equals(a_square.called_draw_image_path, fake_piece.image);
+		
+	});
+	
+	test('square.draw_image(path) draws an image anchored at .left and .top', function() {
+		var canvas = $('#canvas_element_5').get(0);
+		var context = canvas.getContext('2d');
+		
+		var a_square = new square();
+		a_square.set_context(context);
+		a_square.width = 10;
+		a_square.height = 10;
+		a_square.left = 60;
+		a_square.top = 90;
+		
+		a_square.color = 'rgb(0,0,0)';
+		a_square.draw_image('images/chesspieces/black-pawn.png');
+		
+		var raw_canvas = $('#canvas_element_6').get(0);
+		var raw_context = raw_canvas.getContext('2d');
+		
+		var img = new Image();
+		img.src = 'images/chesspieces/black-pawn.png';
+		img.onload = function() {
+			raw_context.drawImage(img,0,0);
+			var pixels = raw_context.getImageData(5,5,25,25);			
+			var other_pixels = context.getImageData(65,95,25,25);
+			
+			for(var i=0;i<100;i++)
+			{
+				if(pixels.data[i] != other_pixels.data[i])
+				{
+					alert('test failed, check console');
+					throw "pixels arent equal on "+i;
+				}
+			}
+		}
+	});
+	test('square.draw_image(path) draws an image', function() {
+		var canvas = $('#canvas_element_3').get(0);
+		var context = canvas.getContext('2d');
+		
+		var a_square = new square();
+		a_square.set_context(context);
+		a_square.width = 10;
+		a_square.height = 10;
+		a_square.left = 0;
+		a_square.top = 0;
+		
+		a_square.color = 'rgb(0,0,0)';
+		a_square.draw_image('images/chesspieces/black-pawn.png');
+		
+		var raw_canvas = $('#canvas_element_4').get(0);
+		var raw_context = raw_canvas.getContext('2d');
+		
+		var img = new Image();
+		img.src = 'images/chesspieces/black-pawn.png';
+		img.onload = function() {
+			raw_context.drawImage(img,0,0);
+			var pixels = raw_context.getImageData(5,5,25,25);			
+			var other_pixels = context.getImageData(5,5,25,25);
+			
+			for(var i=0;i<2500;i++)
+			{
+				if(pixels.data[i] != other_pixels.data[i])
+				{
+					alert('test failed, check console');
+					throw "pixels arent equal on "+i;
+				}
+			}
+		}
+	});
+	test('square.draw() uses its .left and .top attributes', function() {
+		var canvas = $('#canvas_element').get(0);
+		var context = canvas.getContext('2d');
+		
+		var a_square = new square();
+		a_square.set_context(context);
+		a_square.left = 133;
+		a_square.top = 727;
+		a_square.width = 5;
+		a_square.height = 5;
+		
+		var pixel_before_drawing = context.getImageData(133, 727, 1, 1);
+		a_square.draw();
+		var pixel_after_drawing = context.getImageData(133, 727, 1, 1);
+		
+		equals(is_white(pixel_before_drawing), true, 'pixel should be white');
+		equals(is_not_white(pixel_after_drawing), true, 'pixel should not be white');
+	});
+	test('square.draw() fills the square with its color', function() {
+		var canvas = document.getElementById('canvas_element');
+		var context = canvas.getContext('2d');
+		
+		var a_square = new square();
+		var color = 'rgb(33,25,199)';
+		
+		a_square.color = color;
+		a_square.set_context(context);
+		a_square.width = 10;
+		a_square.height = 10;
+		a_square.left = 10;
+		a_square.top = 10;
+		a_square.draw();
+		
+		var pixel = context.getImageData(13,13,1,1);
+		equals(pixel.data[0], 33);
+		equals(pixel.data[1], 25);
+		equals(pixel.data[2], 199);
+		equals(is_not_white(pixel), true, "pixel should not be white");
+	});
+	test('square.draw() uses the width and height properties of itself', function() {
+		var canvas = $('#canvas_element').get(0);
+		var context = canvas.getContext('2d');
+		var a_square = new square();
+		a_square.set_context(context);
+		
+		var width = 10;
+		var height = 99;
+		var x = 33;
+		var y = 22;
+		a_square.width = width;
+		a_square.height = height;
+		a_square.left = x;
+		a_square.top = y;
+		a_square.draw();
+		
+		var pixel = context.getImageData(x, y, width-1, height-1);
+		
+		equals(is_not_white(pixel), true, 'pixel should not be white');		
+	});
+	test('square.draw() uses an ioc canvas context', function() {
+		var this_canvas = $('#canvas_element').get(0);
+		var this_context = this_canvas.getContext('2d');
+		
+		var that_canvas = $('#canvas_element_2').get(0);
+		var that_context = that_canvas.getContext('2d');
+		
+		var this_square = new square();
+		this_square.set_context(this_context);
+		
+		var that_square = new square();
+		that_square.set_context(that_context);
+		
+		var x = 12;
+		var y = 99;
+		var width = 4;
+		var height = 5;
+		this_square.width = width;
+		this_square.height = height;
+		that_square.width = width;
+		that_square.height = height;
+		
+		var this_pixel_before_draw = this_context.getImageData(x, y, width-1, height-1);
+		var that_pixel_before_draw = that_context.getImageData(x, y, width-1, height-1);
+
+		equals(is_white(this_pixel_before_draw), true, "this pixel is white before draw");
+		equals(is_white(that_pixel_before_draw), true, "that pixel is white before draw");
+		
+		this_square.left = x;
+		this_square.top = y;
+		this_square.draw();		
+		var this_pixel_after_this_draw = this_context.getImageData(x, y, width-1, height-1);
+		var that_pixel_after_this_draw = that_context.getImageData(x, y, width-1, height-1);
+		equals(is_not_white(this_pixel_after_this_draw), true, "this pixel is not white after this draw");
+		equals(is_white(that_pixel_after_this_draw), true,  "that pixel is white after this draw");
+		
+		that_square.left = x;
+		that_square.top = y;
+		that_square.draw();
+		var this_pixel_after_that_draw = this_context.getImageData(x, y, width-1, height-1);
+		var that_pixel_after_that_draw = that_context.getImageData(x, y, width-1, height-1);
+		equals(is_not_white(this_pixel_after_that_draw), true, "this pixel is not white after that draw");
+		equals(is_not_white(that_pixel_after_that_draw), true, "that pixel is not white after that draw");
+	});
+	test('square.draw() throws an error if it doesnt have a context', function() {
+		var a_square = new square();
+		raises(a_square.draw, "expected an error, didnt get one");
+	});
+	test("square.draw() draws blank square if theres no piece", function() {
+		var canvas = $('#canvas_element').get(0);
+		var context = canvas.getContext('2d');
+		
+		var a_square = new square();		
+		a_square.set_context(context);
+		equals(a_square.has_piece(), false);
+		
+		var x = 4;
+		var y = 34;
+		var width = 5;
+		var height = 5;
+		a_square.width = width;
+		a_square.height = height;
+		var bottom_right_x = parseInt(x, 10) + parseInt(width, 10) - 1;
+		var bottom_right_y = parseInt(y, 10) + parseInt(height, 10) - 1;
+		
+		
+
+		var canvas = $('#canvas_element').get(0);
+		var context = canvas.getContext('2d');
+		
+		var upper_left_corner_before_drawing = context.getImageData(x, y, 1, 1);
+		var bottom_right_corner_before_drawing = context.getImageData(bottom_right_x, bottom_right_y, 1, 1);
+
+		a_square.left = x;
+		a_square.top = y;
+		a_square.draw();
+	
+		var upper_left_corner_after_drawing = context.getImageData(x, y, 1, 1);
+		var bottom_right_corner_after_drawing = context.getImageData(bottom_right_x, bottom_right_y, 1, 1);
+
+		equals(is_white(upper_left_corner_before_drawing), true);
+		equals(is_white(bottom_right_corner_before_drawing), true);
+		equals(is_not_white(upper_left_corner_after_drawing), true);
+		equals(is_not_white(bottom_right_corner_after_drawing), true);
+	});
+	test("square.set_piece() sets a chess piece", function() {
+		var a_square = new square();
+		var rook = new generic_chess_piece();
+		
+		equals(a_square.has_piece(), false);
+		a_square.set_piece(rook);
+		equals(a_square.has_piece(), true);
+	});
+	test("a square class exists", function() {
+		var a_square = new square();
+	});
+	test("a basic test example", function() {
+		ok( true, "this test is fine" );
+		var value = "hello";
+		equals( "hello", value, "We expect value to be hello" );
+	});
+
+});
+</script>
+<canvas id="highlight_test_1", height="100", width="100"></canvas>
+<canvas id="placement_1" height="100" width="100" style="border: 1px solid red;"></canvas>
+
+<canvas id="click_board_2" height="300" width="300" style="border: 1px solid red;"></canvas>
+<canvas id="click_board_1" height="300" width="300" style="border: 1px solid red;"></canvas>
+<canvas id="board_test_1" height="300" width="300"></canvas>
+
+<canvas id="canvas_element" height="1000" width="1000"></canvas>
+<canvas id="canvas_element_2" height="1000" width="1000"></canvas>
+<canvas id="canvas_element_3" height="1000" width="1000"></canvas>
+<canvas id="canvas_element_4" height="1000" width="1000"></canvas>
+<canvas id="canvas_element_5" height="1000" width="1000"></canvas>
+<canvas id="canvas_element_6" height="1000" width="1000"></canvas>

@@ -1,0 +1,44 @@
+<script src="lib/jquery.144.js"></script>
+<script src="lib/qunit.js"></script>
+<link rel="stylesheet" href="css/qunit.css" />
+
+<body>
+  <h1 id="qunit-header">QUnit example</h1>
+ <h2 id="qunit-banner"></h2>
+ <div id="qunit-testrunner-toolbar"></div>
+ <h2 id="qunit-userAgent"></h2>
+ <ol id="qunit-tests"></ol>
+ <div id="qunit-fixture">test markup, will be hidden</div>
+</body>
+
+<script type="text/javascript" src="lib/square.js"></script>
+<script type="text/javascript" src="lib/board.js"></script>
+<script type="text/javascript" src="lib/piece.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	test('board can get starting board from /get_starting_board ajax call', function() {
+		var canvas = $('#canvas_1').get(0);
+		var context = canvas.getContext('2d');
+		
+		var the_board = new board();
+		the_board.context = context;
+		the_board.set_board_width(300);
+		the_board.set_board_height(300);
+		the_board.squares = the_board.create_empty_chess_board();
+		
+		var a1 = the_board.get_square('a1');
+		
+		equals(a1.has_piece(), false)
+		stop(1000);
+		$.get('/get_starting_board', {}, function(json_response) {
+			var pieces = $.parseJSON(json_response);
+			the_board.set_pieces(pieces);
+			the_board.draw();
+			start();
+			equals(a1.has_piece(), true);
+		});
+	});
+});
+</script>
+
+<canvas id="canvas_1" width="300" height="300"></canvas>
